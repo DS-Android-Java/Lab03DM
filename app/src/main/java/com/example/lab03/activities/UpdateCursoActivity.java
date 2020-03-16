@@ -131,7 +131,7 @@ public class UpdateCursoActivity extends AppCompatActivity {
             carr = ((Carrera)spinnerCarrera.getSelectedItem());
             System.out.println("Carrera data:" + carr.getNombre() + " CodCarrera: " + carr.getCodCarrera());
 
-            Curso cur = new Curso( 
+            Curso cur = new Curso(
                     etCodigo.getText().toString(),
                     carr.getCodCarrera(),
                     etNombre.getText().toString(),
