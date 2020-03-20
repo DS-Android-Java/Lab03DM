@@ -26,7 +26,7 @@ public class AdaptadorCurso extends RecyclerView.Adapter<AdaptadorCurso.MyViewHo
     private Curso deletedItem;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView titulo1, titulo2, description;
+        public TextView titulo1, titulo2, description,profe;
         //two layers
         public RelativeLayout viewForeground, viewBackgroundDelete, viewBackgroundEdit;
 
@@ -35,6 +35,7 @@ public class AdaptadorCurso extends RecyclerView.Adapter<AdaptadorCurso.MyViewHo
             titulo1 = view.findViewById(R.id.titleFirstLbl);
             titulo2 = view.findViewById(R.id.titleSecLbl);
             description = view.findViewById(R.id.descriptionLbl);
+            profe = view.findViewById(R.id.profAsignado);
             viewBackgroundDelete = view.findViewById(R.id.view_background_delete);
             viewBackgroundEdit = view.findViewById(R.id.view_background_edit);
             viewForeground = view.findViewById(R.id.view_foreground);
@@ -70,6 +71,7 @@ public class AdaptadorCurso extends RecyclerView.Adapter<AdaptadorCurso.MyViewHo
         holder.titulo1.setText(curso.getCodigo());
         holder.titulo2.setText(curso.getNombre());
         holder.description.setText(curso.getCreditos() + " créditos");
+        holder.profe.setText("   Profesor: "+curso.getProfesor().getNombre());
     }
 
     @Override
