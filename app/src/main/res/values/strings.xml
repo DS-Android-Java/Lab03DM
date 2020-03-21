@@ -36,6 +36,7 @@
     <string name="action_search">Buscar</string>
 
     <string name="my_curso">Cursos</string>
+    <string name="my_profesor">Profesores</string>
 
     <string name="home_second">Home Second</string>
     <string name="title_activity_nav_drawer">NavDrawerActivity</string>
@@ -61,7 +62,6 @@
     <string name="etAnio">Año</string>
     <string name="etCiclo">Ciclo</string>
     <string name="etHorasSemanales">Horas Semanales</string>
-
 
 
 </resources>

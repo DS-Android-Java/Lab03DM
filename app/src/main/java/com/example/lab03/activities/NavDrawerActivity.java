@@ -70,8 +70,8 @@ public class NavDrawerActivity extends AppCompatActivity
             case "administrador":
                 holder = menu.findItem(R.id.nav_curso);
                 holder.setEnabled(true);
-                //holder = menu.findItem(R.id.nav_profesor);
-                //holder.setEnabled(true);
+                holder = menu.findItem(R.id.nav_profesor);
+                holder.setEnabled(true);
                 break;
             default:    //if is none
                 break;
@@ -126,7 +126,7 @@ public class NavDrawerActivity extends AppCompatActivity
             abrirAdmCurso();
         } else if (id == R.id.nav_profesor) {
             Toast.makeText(getApplicationContext(), "Profesores", Toast.LENGTH_SHORT).show();
-            //abrirAdmProfesor();
+            abrirAdmProfesor();
         } else if (id == R.id.nav_logout) {
             Toast.makeText(getApplicationContext(), "Log Out", Toast.LENGTH_SHORT).show();
             abrirLogin();
@@ -148,9 +148,9 @@ public class NavDrawerActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    /*public void abrirAdmProfesor() {
-        Intent intent = new Intent(this, AdmProfesorActivity.class);
+    public void abrirAdmProfesor() {
+        Intent intent = new Intent(this, MantenimientoProfesorActivity.class);
         startActivity(intent);
-    }*/
+    }
 
 }
