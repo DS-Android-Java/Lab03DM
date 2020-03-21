@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.lab03.adaptador.AdaptadorCurso;
+import com.example.lab03.adaptador.AdaptadorProfesor;
 
 public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
     private RecyclerItemTouchHelperListener listener;
@@ -58,11 +59,11 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
                 backgroundViewEdit = ((AdaptadorCurso.MyViewHolder) viewHolder).viewBackgroundEdit;
                 backgroundViewDelete = ((AdaptadorCurso.MyViewHolder) viewHolder).viewBackgroundDelete;
                 foregroundView = ((AdaptadorCurso.MyViewHolder) viewHolder).viewForeground;
-            }/* else if (this.listener.getClass().getSimpleName().equals("AdmCarreraActivity")) {
+            }else if (this.listener.getClass().getSimpleName().equals("MantenimientoProfesorActivity")) {
                 backgroundViewEdit = ((AdaptadorProfesor.MyViewHolder) viewHolder).viewBackgroundEdit;
                 backgroundViewDelete = ((AdaptadorProfesor.MyViewHolder) viewHolder).viewBackgroundDelete;
                 foregroundView = ((AdaptadorProfesor.MyViewHolder) viewHolder).viewForeground;
-            }*/
+            }
 
             //Selected item
             if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {

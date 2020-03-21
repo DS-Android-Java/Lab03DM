@@ -13,7 +13,7 @@ import com.example.lab03.R;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.SearchView;
+import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
@@ -107,8 +107,7 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
 
         // Associate searchable configuration with the SearchView   !IMPORTANT
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView = (SearchView) menu.findItem(R.id.action_search)
-                .getActionView();
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager
                 .getSearchableInfo(getComponentName()));
         searchView.setMaxWidth(Integer.MAX_VALUE);

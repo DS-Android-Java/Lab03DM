@@ -91,9 +91,9 @@ public class AdaptadorProfesor extends RecyclerView.Adapter<AdaptadorProfesor.My
             cedula= view.findViewById(R.id.cedula);
             telefono = view.findViewById(R.id.telefono);
             email = view.findViewById(R.id.email);
-            viewBackgroundDelete = view.findViewById(R.id.view_background_delete);
-            viewBackgroundEdit = view.findViewById(R.id.view_background_edit);
-            viewForeground = view.findViewById(R.id.view_foreground);
+            viewBackgroundDelete = view.findViewById(R.id.view_background_deleteP);
+            viewBackgroundEdit = view.findViewById(R.id.view_background_editP);
+            viewForeground = view.findViewById(R.id.view_foregroundP);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
