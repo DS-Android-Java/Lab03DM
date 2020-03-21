@@ -59,7 +59,7 @@ public class AdaptadorCurso extends RecyclerView.Adapter<AdaptadorCurso.MyViewHo
     @Override
     public AdaptadorCurso.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_list_row_profe, parent, false);
+                .inflate(R.layout.item_list_row, parent, false);
 
         return new MyViewHolder(itemView);
     }
