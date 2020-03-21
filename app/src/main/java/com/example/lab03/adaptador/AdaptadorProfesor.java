@@ -39,8 +39,8 @@ public class AdaptadorProfesor extends RecyclerView.Adapter<AdaptadorProfesor.My
         final  Profesor profesor = profesorListFiltered.get(position);
         holder.nombre.setText(profesor.getNombre());
         holder.cedula.setText(profesor.getCedula());
-        holder.telefono.setText("Teléfono" + profesor.getTelefono());
-        holder.email.setText("Email:" +profesor.getEmail());
+        holder.telefono.setText("Teléfono: " + profesor.getTelefono());
+        holder.email.setText("  Email: " +profesor.getEmail());
     }
 
     @Override

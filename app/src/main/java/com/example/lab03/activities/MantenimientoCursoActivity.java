@@ -105,7 +105,7 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                 mAdapter.removeItem(viewHolder.getAdapterPosition());
 
                 // showing snack bar with Undo option
-                Snackbar snackbar = Snackbar.make(coordinatorLayout, name + " removido!", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(coordinatorLayout, name + " Removido!", Snackbar.LENGTH_LONG);
                 snackbar.setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -229,15 +229,15 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                     }
                     //check if exist
                     if (founded) {
-                        Toast.makeText(getApplicationContext(), aux.getNombre() + " editado correctamente", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), aux.getNombre() + " Editado Correctamente!", Toast.LENGTH_LONG).show();
                     } else {
-                        Toast.makeText(getApplicationContext(), aux.getNombre() + " no encontrado", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), aux.getNombre() + " No Encontrado!!!", Toast.LENGTH_LONG).show();
                     }
                 }
             } else {
                 //found a new Curso Object
                 cursoList.add(aux);
-                Toast.makeText(getApplicationContext(), aux.getNombre() + " agregado correctamente", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), aux.getNombre() + " Agregado Correctamente!", Toast.LENGTH_LONG).show();
             }
         }
     }

@@ -70,7 +70,7 @@ public class AdaptadorCurso extends RecyclerView.Adapter<AdaptadorCurso.MyViewHo
         final Curso curso = cursoListFiltered.get(position);
         holder.titulo1.setText(curso.getCodigo());
         holder.titulo2.setText(curso.getNombre());
-        holder.description.setText(curso.getCreditos() + " créditos");
+        holder.description.setText(curso.getCreditos() + " Créditos");
         holder.profe.setText("   Profesor: "+curso.getProfesor().getNombre());
     }
 
