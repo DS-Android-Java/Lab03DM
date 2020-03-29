@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lab03.R;
@@ -77,7 +78,7 @@ public class UpdateProfesorActivity extends AppCompatActivity {
         int ancho = medidasVentana.widthPixels;
         int alto = medidasVentana.heightPixels;
 
-        getWindow().setLayout((int)(ancho * 0.90), (int)(alto * 0.90));
+        getWindow().setLayout((int)(ancho * 0.90), (int)(alto * 0.50));
     }
 
     public void editProfesor(){

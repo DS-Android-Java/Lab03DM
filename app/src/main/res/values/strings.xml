@@ -24,8 +24,8 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Gestión Academica</string>
+    <string name="nav_header_subtitle">www.gestionAcademica.una.ac.cr</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
@@ -39,8 +39,10 @@
     <string name="my_profesor">Profesores</string>
 
     <string name="home_second">Home Second</string>
-    <string name="title_activity_nav_drawer">NavDrawerActivity</string>
+    <string name="title_activity_nav_drawer">Menú de navegación</string>
 
+    <string name="labelACurso">Datos de Curso</string>
+    <string name="labelAProfesor">Datos de Profesor</string>
 
     <string name="edit">Editar</string>
     <string name="delete">Eliminar</string>

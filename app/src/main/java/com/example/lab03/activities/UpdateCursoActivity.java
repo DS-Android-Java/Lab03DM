@@ -117,7 +117,7 @@ public class UpdateCursoActivity extends AppCompatActivity {
         int ancho = medidasVentana.widthPixels;
         int alto = medidasVentana.heightPixels;
 
-        getWindow().setLayout((int)(ancho * 0.90), (int)(alto * 0.90));
+        getWindow().setLayout((int)(ancho * 0.90), (int)(alto * 0.80));
     }
 
     public void addCurso() {
