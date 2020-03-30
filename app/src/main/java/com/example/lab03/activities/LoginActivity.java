@@ -49,10 +49,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
     private static final String[] DUMMY_CREDENTIALS = new String[]{
             "@admin:admin", "@:admin"
     };
@@ -70,104 +66,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
     private View mProgressView;
     private View mLoginFormView;
 
-    /*@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
 
-        final EditText usernameEditText = findViewById(R.id.username);
-        final EditText passwordEditText = findViewById(R.id.password);
-        final Button loginButton = findViewById(R.id.login);
-        final ProgressBar loadingProgressBar = findViewById(R.id.loading);
-
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
-            @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
-                if (loginFormState == null) {
-                    return;
-                }
-                loginButton.setEnabled(loginFormState.isDataValid());
-                if (loginFormState.getUsernameError() != null) {
-                    usernameEditText.setError(getString(loginFormState.getUsernameError()));
-                }
-                if (loginFormState.getPasswordError() != null) {
-                    passwordEditText.setError(getString(loginFormState.getPasswordError()));
-                }
-            }
-        });
-
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
-            @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
-                if (loginResult == null) {
-                    return;
-                }
-                loadingProgressBar.setVisibility(View.GONE);
-                if (loginResult.getError() != null) {
-                    showLoginFailed(loginResult.getError());
-                }
-                if (loginResult.getSuccess() != null) {
-                    updateUiWithUser(loginResult.getSuccess());
-                }
-                setResult(Activity.RESULT_OK);
-
-                //Complete and destroy login activity once successful
-                finish();
-            }
-        });
-
-        TextWatcher afterTextChangedListener = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // ignore
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
-            }
-        };
-        usernameEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.addTextChangedListener(afterTextChangedListener);
-        passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    loginViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
-                }
-                return false;
-            }
-        });
-
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
-            }
-        });
-    }*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        // Setting up shared preferences
-        prefs = this.getSharedPreferences(getString(R.string.preference_user_key), Context.MODE_PRIVATE);
-
-        // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        prefs = this.getSharedPreferences(getString(R.string.preference_user_key), Context.MODE_PRIVATE); // Setting up shared preferences
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);   // Set up the login form.
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -181,7 +86,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
                 return false;
             }
         });
-
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,7 +93,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
                 attemptLogin();
             }
         });
-
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
@@ -198,7 +101,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
         ArrayList<Usuario> usuariosList = new ArrayList<>();
         //administrador
         usuariosList.add(new Usuario("@diego", "diego", "administrador"));
-        usuariosList.add(new Usuario("@allison", "alli", "administrador"));
+        usuariosList.add(new Usuario("@allison", "allimv", "administrador"));
         //matriculador
         usuariosList.add(new Usuario("@vane", "vanessa", "matriculador"));
 
@@ -248,56 +151,33 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
         }
     }
 
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-    private void attemptLogin() {//Intento de login
+    private void attemptLogin() {
         if (mAuthTask != null) {
-            return;
-        }
-
-        // Reset errors.
-        mEmailView.setError(null);
+            return;  }
+        mEmailView.setError(null); // Reset errors.
         mPasswordView.setError(null);
-
-        // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        String email = mEmailView.getText().toString();  // Store values at the time of the login attempt.
         String password = mPasswordView.getText().toString();
-
         boolean cancel = false;
         View focusView = null;
-
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) { // Check for a valid password, if the user entered one.
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
-            cancel = true;
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
+            cancel = true; }
+        if (TextUtils.isEmpty(email)) {   // Check for a valid email address.
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
         } else if (!isUsuarioValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
-            cancel = true;
-        }
-
+            cancel = true;  }
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+            focusView.requestFocus(); // There was an error; don't attempt login and focus the first form field with an error.
+        } else { // Show a progress spinner, and kick off a background task to perform the user login attempt.
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
-        }
+            mAuthTask.execute((Void) null); }
     }
 
     private boolean isUsuarioValid(String usuario) {
@@ -310,9 +190,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
         return password.length() > 4;
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
+
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
@@ -412,7 +290,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
             mEmail = email;
             mPassword = password;
         }
-
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
@@ -422,14 +299,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
             } catch (InterruptedException e) {
                 return false;
             }
-            /*
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }*/
             for (Usuario user : searchUsers()) {
                 if (user.getUsuario().equals(mEmail)) {
                     // Account exists, return true if the password matches.
@@ -437,7 +306,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
                     return usuario.getClave().equals(mPassword);
                 }
             }
-
             // TODO: register the new account here.
             return false;
         }
@@ -466,14 +334,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
         }
     }
 
-    /*private void updateUiWithUser(LoggedInUserView model) {
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
-        Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-    }
 
-    private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
-    }*/
+
 
 }

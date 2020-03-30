@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.lab03">
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.lab03">
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -13,7 +10,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <!-- __________________UPDATE CURSO -->
         <activity
             android:name=".activities.UpdateCursoActivity"
@@ -52,6 +48,4 @@
             android:name=".activities.UpdateProfesorActivity"
             android:theme="@style/AppTheme.TemaPopup">
         </activity>
-    </application>
-
-</manifest>
+    </application> </manifest>

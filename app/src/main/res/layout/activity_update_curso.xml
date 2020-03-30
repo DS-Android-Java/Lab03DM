@@ -37,7 +37,7 @@
         android:layout_marginLeft="0dp"
         android:layout_marginTop="28dp"
         android:ems="10"
-        android:hint="@string/etCodigo"
+        android:hint="Código"
         android:inputType="textPersonName"
         app:layout_constraintStart_toEndOf="@+id/tvCodigo"
         app:layout_constraintTop_toBottomOf="@+id/tvTituloUpdateCurso" />
@@ -63,7 +63,7 @@
         android:layout_marginLeft="0dp"
         android:layout_marginTop="0dp"
         android:ems="10"
-        android:hint="@string/etCreditos"
+        android:hint="Créditos"
         android:inputType="textPersonName"
         app:layout_constraintStart_toEndOf="@+id/tvCreditos"
         app:layout_constraintTop_toBottomOf="@+id/etNombre" />
