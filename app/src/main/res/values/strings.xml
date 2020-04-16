@@ -7,7 +7,7 @@
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Contraseña</string>
-    <string name="action_sign_in">Ingresar o registrarse</string>
+    <string name="action_sign_in">Ingresar</string>
     <string name="action_sign_in_short">Loguearse</string>
     <string name="welcome">"Bienvenido !"</string>
     <string name="invalid_username">Usuario invalido</string>
@@ -24,7 +24,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Gestión Academica</string>
+    <string name="nav_header_title">Gestión Académica</string>
     <string name="nav_header_subtitle">www.gestionAcademica.una.ac.cr</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
@@ -49,8 +49,8 @@
 
     <!--Formulario Update Curso-->
     <string name="tvTituloUpdateCurso">Actualización Curso</string>
-    <string name="tvCodigo">Codigo:</string>
-    <string name="tvCodCarrera">Codigo de Carrera:</string>
+    <string name="tvCodigo">Código:</string>
+    <string name="tvCodCarrera">Código de Carrera:</string>
     <string name="tvNombre">Nombre:</string>
     <string name="tvCreditos">Creditos: </string>
     <string name="tvAnio">Año:</string>
@@ -58,12 +58,11 @@
     <string name="tvHorasSemanales">Horas semanales:</string>
     <string name="tvProfesor">Profesor:</string>
 
-    <string name="etCodigo">Codigo</string>
+    <string name="etCodigo">Código</string>
     <string name="etNombre">Nombre</string>
     <string name="etCreditos">Creditos</string>
     <string name="etAnio">Año</string>
     <string name="etCiclo">Ciclo</string>
     <string name="etHorasSemanales">Horas Semanales</string>
-
 
 </resources>
