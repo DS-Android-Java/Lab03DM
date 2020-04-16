@@ -131,7 +131,7 @@ public class ModelData {
     public List<Usuario> getUsuariosList() {
         List<Usuario> users = new ArrayList<>();
         users.add(new Usuario("@diego", "diego", "administrador"));
-        users.add(new Usuario("@allison", "allison", "administrador"));
+        users.add(new Usuario("@allison", "allimv", "administrador"));
         users.add(new Usuario("@vane", "vanessa", "matriculador"));
         return users;
     }
