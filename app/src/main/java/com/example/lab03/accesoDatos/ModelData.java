@@ -35,7 +35,7 @@ public class ModelData {
     public List<Carrera> initCarreras() {
         listaCarrera = new ArrayList<>();
         initCursos();
-        Carrera carrera = new Carrera("EIF", "Ingenieria en sistemas");
+        Carrera carrera = new Carrera("EIF", "Ingeniería en Sistemas");
         carrera.addCurso(listaCurso.get(0));
         carrera.addCurso(listaCurso.get(1));
         carrera.addCurso(listaCurso.get(2));
@@ -50,17 +50,17 @@ public class ModelData {
         carrera.addCurso(listaCurso.get(11));
         listaCarrera.add(carrera);
 
-        carrera = new Carrera("ADM", "Administracion");
+        carrera = new Carrera("ADM", "Administración");
         carrera.addCurso(listaCurso.get(12));
         carrera.addCurso(listaCurso.get(13));
         listaCarrera.add(carrera);
 
-        carrera = new Carrera("FIS", "Fisica");
+        carrera = new Carrera("FIS", "Física");
         carrera.addCurso(listaCurso.get(14));
         carrera.addCurso(listaCurso.get(15));
         listaCarrera.add(carrera);
 
-        carrera = new Carrera("MAT", "Matematica");
+        carrera = new Carrera("MAT", "Matemáticas");
         carrera.addCurso(listaCurso.get(16));
         carrera.addCurso(listaCurso.get(17));
         listaCarrera.add(carrera);
@@ -90,19 +90,19 @@ public class ModelData {
                 listaProfesor.get(0)));
         listaCurso.add(new Curso("FD", "EIF", "Fundamentos", "3", "1","I","12",
                 listaProfesor.get(2)));
-        listaCurso.add(new Curso("PG1", "EIF", "Programacion I", "3", "1","II","12",
+        listaCurso.add(new Curso("PG1", "EIF", "Programación I", "3", "1","II","12",
                 listaProfesor.get(2)));
-        listaCurso.add(new Curso("PG2", "EIF", "Programacion II", "4", "2","I","12",
+        listaCurso.add(new Curso("PG2", "EIF", "Programación II", "4", "2","I","12",
                 listaProfesor.get(1)));
-        listaCurso.add(new Curso("PG3", "EIF", "Programacion III", "5" ,"2","II","12",
+        listaCurso.add(new Curso("PG3", "EIF", "Programación III", "5" ,"2","II","12",
                 listaProfesor.get(1)));
-        listaCurso.add(new Curso("PG4", "EIF", "Programacion IV", "6", "3","I","12",
+        listaCurso.add(new Curso("PG4", "EIF", "Programación IV", "6", "3","I","12",
                 listaProfesor.get(1)));
-        listaCurso.add(new Curso("EDA", "EIF", "Estructuras Datos", "4", "3","I","12",
+        listaCurso.add(new Curso("EDA", "EIF", "Estructuras de Datos", "4", "3","I","12",
                 listaProfesor.get(3)));
         listaCurso.add(new Curso("EDI", "EIF", "Estructuras Discretas", "3", "1","II","12",
                 listaProfesor.get(3)));
-        listaCurso.add(new Curso("MV", "EIF", "Moviles", "5", "4","I","12",
+        listaCurso.add(new Curso("MV", "EIF", "Dispositivos Móviles", "5", "4","I","12",
                 listaProfesor.get(3)));
         listaCurso.add(new Curso("AQ", "EIF", "Arquitectura", "5", "3","I","12",
                 listaProfesor.get(1)));
@@ -111,27 +111,27 @@ public class ModelData {
         listaCurso.add(new Curso("RD", "EIF", "Redes", "5", "3","II","12",
                 listaProfesor.get(0)));
         //CURSOS CARRERA ADMIN
-        listaCurso.add(new Curso("FAD", "ADM","Fundamentos de Administracion", "3", "4","I","1",
+        listaCurso.add(new Curso("FAD", "ADM","Fundamentos de Administración", "3", "4","I","1",
                 listaProfesor.get(2)));
         listaCurso.add(new Curso("C1", "ADM","Contabilidad I", "3", "4","II","2",
                 listaProfesor.get(2)));
         //CURSOS CARRERA FISICA
-        listaCurso.add(new Curso("FF", "FIS","Fundamentos de Fisica", "3", "4","I","15",
+        listaCurso.add(new Curso("FF", "FIS","Fundamentos de Física", "3", "4","I","15",
                 listaProfesor.get(0)));
-        listaCurso.add(new Curso("F1", "FIS","Fisica I","3", "4","II","10",
+        listaCurso.add(new Curso("F1", "FIS","Física I","3", "4","II","10",
                 listaProfesor.get(2)));
 
         //CURSOS CARRERA MATEMATICA
-        listaCurso.add(new Curso("FM", "MAT","Fundamentos de Matematica", "3", "4","I","10",
+        listaCurso.add(new Curso("FM", "MAT","Fundamentos de Matemáticas", "3", "4","I","10",
                 listaProfesor.get(1)));
-        listaCurso.add(new Curso("HB1", "MAT","Historia Basica I", "3", "4","II","12",
+        listaCurso.add(new Curso("HB1", "MAT","Historia Básica I", "3", "4","II","12",
                 listaProfesor.get(3)));
     }
 
     public List<Usuario> getUsuariosList() {
         List<Usuario> users = new ArrayList<>();
         users.add(new Usuario("@diego", "diego", "administrador"));
-        users.add(new Usuario("@allison", "alli", "administrador"));
+        users.add(new Usuario("@allison", "allison", "administrador"));
         users.add(new Usuario("@vane", "vanessa", "matriculador"));
         return users;
     }
