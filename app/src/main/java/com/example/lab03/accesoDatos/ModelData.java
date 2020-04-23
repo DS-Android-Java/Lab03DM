@@ -14,22 +14,31 @@ public class ModelData {
     private List<Carrera> listaCarrera;
     private List<Usuario> listaUsuario;
 
-    public ModelData(List<Profesor> listaProfesor, List<Curso> listaCurso, List<Carrera> listaCarrera, List<Usuario> listaUsuario) {
+    private static ModelData modelData;
+
+    private ModelData(List<Profesor> listaProfesor, List<Curso> listaCurso, List<Carrera> listaCarrera, List<Usuario> listaUsuario) {
         this.listaProfesor = listaProfesor;
         this.listaCurso = listaCurso;
         this.listaCarrera = listaCarrera;
         this.listaUsuario = listaUsuario;
     }
 
-    public ModelData() {
+    private ModelData() {
         listaProfesor = new ArrayList<>();
         listaCarrera = new ArrayList<>();
         listaCurso = new ArrayList<>();
         listaUsuario = new ArrayList<>();
 
         initCarreras();
-        //initProfesores();
+        initProfesores();
         //initCursos();
+    }
+
+    public static ModelData getInstance(){
+        if(modelData == null){
+            modelData = new ModelData();
+        }
+        return modelData;
     }
 
     public List<Carrera> initCarreras() {

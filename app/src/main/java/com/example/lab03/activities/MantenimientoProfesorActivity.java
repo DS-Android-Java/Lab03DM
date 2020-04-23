@@ -43,7 +43,7 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
     private CoordinatorLayout coordinatorLayout;
     private SearchView searchView;
     private FloatingActionButton floatingActionButton;
-    private ModelData modelData;
+    private ModelData modelData = ModelData.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
         getSupportActionBar().setTitle("Profesores");
         mRecyclerView = findViewById(R.id.recycler_profesoresFld);
         profesorList = new ArrayList<>();
-        modelData = new ModelData();
+        modelData = ModelData.getInstance();
         profesorList=modelData.getListaProfesor();
         adaptadorProfesor = new AdaptadorProfesor(profesorList, this);
         coordinatorLayout = findViewById(R.id.constraint_layoutP);

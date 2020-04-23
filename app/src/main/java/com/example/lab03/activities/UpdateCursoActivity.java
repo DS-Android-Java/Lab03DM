@@ -34,7 +34,7 @@ public class UpdateCursoActivity extends AppCompatActivity {
     private EditText etHorasSemanales;
     private Spinner spinnerProfesor;
     private Spinner spinnerCarrera;
-    private ModelData model = new ModelData();
+    private ModelData model =  ModelData.getInstance();
 
     //private ArrayList<String> nombresP = new ArrayList<>();
     //private ArrayList<String> cedulaP = new ArrayList<>();
@@ -65,14 +65,15 @@ public class UpdateCursoActivity extends AppCompatActivity {
         //Cargado spinners o combos
         spinnerProfesor = findViewById(R.id.spinnerProfesor);
         List<Profesor> profesores = new ArrayList<>();
-        profesores = model.initProfesores();
+        //profesores = model.initProfesores();
+        profesores = model.getListaProfesor();
 
         ArrayAdapter<Profesor> adaptador = new ArrayAdapter<Profesor>(this, R.layout.spinner_item_diego, profesores);
         spinnerProfesor.setAdapter(adaptador);
 
         spinnerCarrera = findViewById(R.id.spinnerCarrera);
         List<Carrera> carreras = new ArrayList<>();
-        carreras = model.initCarreras();
+        carreras = model.getListaCarrera();//.initCarreras();
 
         ArrayAdapter<Carrera> adaptadorC = new ArrayAdapter<Carrera>(this, R.layout.spinner_item_diego, carreras);
         spinnerCarrera.setAdapter(adaptadorC);

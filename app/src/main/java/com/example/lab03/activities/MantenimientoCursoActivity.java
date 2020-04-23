@@ -41,7 +41,7 @@ public class MantenimientoCursoActivity extends AppCompatActivity
     private CoordinatorLayout coordinatorLayout;
     private SearchView searchView;
     private FloatingActionButton fab;
-    private ModelData model;
+    private ModelData model = ModelData.getInstance();
 
 
     @Override
@@ -56,7 +56,7 @@ public class MantenimientoCursoActivity extends AppCompatActivity
 
         mRecyclerView = findViewById(R.id.recycler_cursosFld);
         cursoList = new ArrayList<>();
-        model= new ModelData();
+        model= ModelData.getInstance();
         cursoList= model.getListaCurso();
         mAdapter = new AdaptadorCurso(cursoList, this);
         coordinatorLayout = findViewById(R.id.coordinator_layoutC);

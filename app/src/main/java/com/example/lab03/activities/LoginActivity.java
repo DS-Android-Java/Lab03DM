@@ -33,6 +33,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.lab03.R;
+import com.example.lab03.accesoDatos.ModelData;
 import com.example.lab03.logicaDeNegocio.Usuario;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -65,6 +66,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private ModelData model = ModelData.getInstance();
 
 
     @Override
@@ -98,12 +100,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
     }
 
     private ArrayList<Usuario> searchUsers() {
-        ArrayList<Usuario> usuariosList = new ArrayList<>();
+        ArrayList<Usuario> usuariosList = (ArrayList<Usuario>) model.getUsuariosList();
         //administrador
-        usuariosList.add(new Usuario("@diego", "diego", "administrador"));
+        /*usuariosList.add(new Usuario("@diego", "diego", "administrador"));
         usuariosList.add(new Usuario("@allison", "allimv", "administrador"));
         //matriculador
-        usuariosList.add(new Usuario("@vane", "vanessa", "matriculador"));
+        usuariosList.add(new Usuario("@vane", "vanessa", "matriculador"));*/
 
         return usuariosList;
     }
@@ -333,8 +335,5 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
             showProgress(false);
         }
     }
-
-
-
 
 }
