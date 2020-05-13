@@ -8,12 +8,15 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,12 +31,21 @@ import com.example.lab03.helper.RecyclerItemTouchHelper;
 import com.example.lab03.logicaDeNegocio.Curso;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MantenimientoCursoActivity extends AppCompatActivity
         implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener, AdaptadorCurso.AdaptadorCursoListener {
+
+    String apiUrl = "http://192.168.0.3:8080/Backend_JSON//modelos/curso/list?";
+    //String apiUrl = "http://10.0.2.2:8080/Backend_JSON/modelos/curso/list";//Esta para emulador
 
     private RecyclerView mRecyclerView;
     private AdaptadorCurso mAdapter;
@@ -41,7 +53,8 @@ public class MantenimientoCursoActivity extends AppCompatActivity
     private CoordinatorLayout coordinatorLayout;
     private SearchView searchView;
     private FloatingActionButton fab;
-    private ModelData model = ModelData.getInstance();
+    ProgressDialog progressDialog;
+    private ModelData model;
 
 
     @Override
@@ -50,6 +63,7 @@ public class MantenimientoCursoActivity extends AppCompatActivity
         setContentView(R.layout.activity_mantenimiento_curso);
         Toolbar toolbar = findViewById(R.id.toolbarC);
         setSupportActionBar(toolbar);
+        model = ModelData.getInstance();
 
         //toolbar fancy stuff
         getSupportActionBar().setTitle(getString(R.string.my_curso));
@@ -69,6 +83,10 @@ public class MantenimientoCursoActivity extends AppCompatActivity
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
+
+        //AsyncTask aca se usa el web service para cargar los datos de la base del profesor
+        MyAsyncTasksCurso myAsyncTasks = new MyAsyncTasksCurso();
+        myAsyncTasks.execute();
 
         // go to update or add career
         fab = findViewById(R.id.addBtnC);
@@ -126,6 +144,112 @@ public class MantenimientoCursoActivity extends AppCompatActivity
             mAdapter.notifyDataSetChanged(); //restart left swipe view
             startActivity(intent);
         }
+    }
+
+    public class MyAsyncTasksCurso extends AsyncTask<String, String, String> {
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // display a progress dialog for good user experiance
+            progressDialog = new ProgressDialog(MantenimientoCursoActivity.this);
+            progressDialog.setMessage("Please Wait");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            // implement API in background and store the response in current variable
+            String current = "";
+
+            try {
+                URL url;
+                HttpURLConnection urlConnection = null;
+                try {
+                    url = new URL(apiUrl);
+
+                    urlConnection = (HttpURLConnection) url.openConnection();
+
+                    ////
+                    urlConnection.setRequestMethod("GET"); // or POST
+                    urlConnection.setDoInput(true);
+                    urlConnection.setDoOutput(true);
+                    ////
+                    InputStream in = urlConnection.getInputStream();
+
+                    InputStreamReader isw = new InputStreamReader(in);
+
+                    int data = isw.read();
+                    while (data != -1) {
+                        current += (char) data;
+                        data = isw.read();
+                        //System.out.print(current);
+                    }
+                    // return the data to onPostExecute method
+                    Log.w("JSON",current);
+                    return current;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (urlConnection != null) {
+                        urlConnection.disconnect();
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "Exception: " + e.getMessage();
+            }
+            return current;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+            //String jsonObjectAsString = "";
+            String jsonObjectAsString = s;
+            // dismiss the progress dialog after receiving data from API
+            progressDialog.dismiss();
+
+            //Json
+            /*try {
+                JSONObject jsonObject = new JSONObject(s.toString());//Creamos el objeto JSON
+                JSONArray jArray = jsonObject.getJSONArray("fruits");//Sacamos el array de json del objeto creado anteriormente
+                for (int i=0; i<jArray.length();i++){//Se recorre array de json
+                    jsonObjectAsString = jsonObjectAsString + jArray.getString(i) + " ";
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }*/
+            try{
+                Gson gson = new Gson();
+
+                cursoList = (ArrayList<Curso>) gson.fromJson(s,
+                        new TypeToken<ArrayList<Curso>>(){}.getType());
+
+                mAdapter = new AdaptadorCurso(cursoList, MantenimientoCursoActivity.this);
+                coordinatorLayout = findViewById(R.id.coordinator_layoutC);
+
+                //white background notification bar
+                whiteNotificationBar(mRecyclerView);
+                Log.d("dataCursos", jsonObjectAsString);
+
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                mRecyclerView.setLayoutManager(mLayoutManager);
+                mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                mRecyclerView.addItemDecoration(new DividerItemDecoration(MantenimientoCursoActivity.this, DividerItemDecoration.VERTICAL));
+                mRecyclerView.setAdapter(mAdapter);
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            //tvData.setText(s);
+        }
+
     }
 
     @Override

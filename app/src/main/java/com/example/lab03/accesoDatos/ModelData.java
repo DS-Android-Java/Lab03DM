@@ -30,7 +30,7 @@ public class ModelData {
         listaUsuario = new ArrayList<>();
 
         initCarreras();
-        initProfesores();
+        //initProfesores();//por que como ya los estoy sacando de la base para que no me salgan los quemados
         //initCursos();
     }
 
