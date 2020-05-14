@@ -75,9 +75,7 @@ public class AdaptadorCurso extends RecyclerView.Adapter<AdaptadorCurso.MyViewHo
     }
 
     @Override
-    public int getItemCount() {
-        return cursoListFiltered.size();
-    }
+    public int getItemCount() { return cursoListFiltered.size(); }
 
     public void removeItem(int position) {//Funcion para eliminar el curso de la lista
         deletedItem = cursoListFiltered.remove(position);

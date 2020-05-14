@@ -20,8 +20,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import androidx.appcompat.widget.SearchView;
+
 import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.lab03.R;
@@ -34,6 +37,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONObject;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -44,7 +49,12 @@ import java.util.List;
 public class MantenimientoCursoActivity extends AppCompatActivity
         implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener, AdaptadorCurso.AdaptadorCursoListener {
 
-    String apiUrl = "http://192.168.0.3:8080/Backend_JSON//modelos/curso/list?";
+    //Url listar
+    String apiUrl = "http://192.168.0.3:8080/Backend_JSON/modelos/curso/list?";
+    //String apiUrl = "http://10.0.2.2:8080/Backend_JSON/modelos/curso/list";//Esta para emulador
+
+    //Url eliminar
+    String apiUrlDelete = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso/delete?";
     //String apiUrl = "http://10.0.2.2:8080/Backend_JSON/modelos/curso/list";//Esta para emulador
 
     private RecyclerView mRecyclerView;
@@ -55,6 +65,7 @@ public class MantenimientoCursoActivity extends AppCompatActivity
     private FloatingActionButton fab;
     ProgressDialog progressDialog;
     private ModelData model;
+    private String mensaje;
 
 
     @Override
@@ -64,14 +75,15 @@ public class MantenimientoCursoActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbarC);
         setSupportActionBar(toolbar);
         model = ModelData.getInstance();
+        mensaje = "";
 
         //toolbar fancy stuff
         getSupportActionBar().setTitle(getString(R.string.my_curso));
 
         mRecyclerView = findViewById(R.id.recycler_cursosFld);
         cursoList = new ArrayList<>();
-        model= ModelData.getInstance();
-        cursoList= model.getListaCurso();
+        model = ModelData.getInstance();
+        cursoList = model.getListaCurso();
         mAdapter = new AdaptadorCurso(cursoList, this);
         coordinatorLayout = findViewById(R.id.coordinator_layoutC);
 
@@ -116,6 +128,11 @@ public class MantenimientoCursoActivity extends AppCompatActivity
             if (viewHolder instanceof AdaptadorCurso.MyViewHolder) {
                 // get the removed item name to display it in snack bar
                 String name = cursoList.get(viewHolder.getAdapterPosition()).getNombre();
+                String idCurso = cursoList.get(viewHolder.getAdapterPosition()).getCodigo();
+
+                apiUrlDelete = apiUrlDelete + "id_Curso=" + idCurso;
+                MyAsyncTasksCursoDelete myAsyncTasksCursoDelete = new MyAsyncTasksCursoDelete();
+                myAsyncTasksCursoDelete.execute();
 
                 // save the index deleted
                 final int deletedIndex = viewHolder.getAdapterPosition();
@@ -123,7 +140,7 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                 mAdapter.removeItem(viewHolder.getAdapterPosition());
 
                 // showing snack bar with Undo option
-                Snackbar snackbar = Snackbar.make(coordinatorLayout, name + " Removido!", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(coordinatorLayout, name + mensaje, Snackbar.LENGTH_LONG);
                 snackbar.setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -189,7 +206,7 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                         //System.out.print(current);
                     }
                     // return the data to onPostExecute method
-                    Log.w("JSON",current);
+                    Log.w("JSON", current);
                     return current;
 
                 } catch (Exception e) {
@@ -216,20 +233,12 @@ public class MantenimientoCursoActivity extends AppCompatActivity
             progressDialog.dismiss();
 
             //Json
-            /*try {
-                JSONObject jsonObject = new JSONObject(s.toString());//Creamos el objeto JSON
-                JSONArray jArray = jsonObject.getJSONArray("fruits");//Sacamos el array de json del objeto creado anteriormente
-                for (int i=0; i<jArray.length();i++){//Se recorre array de json
-                    jsonObjectAsString = jsonObjectAsString + jArray.getString(i) + " ";
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }*/
-            try{
+            try {
                 Gson gson = new Gson();
 
                 cursoList = (ArrayList<Curso>) gson.fromJson(s,
-                        new TypeToken<ArrayList<Curso>>(){}.getType());
+                        new TypeToken<ArrayList<Curso>>() {
+                        }.getType());
 
                 mAdapter = new AdaptadorCurso(cursoList, MantenimientoCursoActivity.this);
                 coordinatorLayout = findViewById(R.id.coordinator_layoutC);
@@ -244,12 +253,79 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                 mRecyclerView.addItemDecoration(new DividerItemDecoration(MantenimientoCursoActivity.this, DividerItemDecoration.VERTICAL));
                 mRecyclerView.setAdapter(mAdapter);
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             //tvData.setText(s);
         }
 
+    }
+
+    public class MyAsyncTasksCursoDelete extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // display a progress dialog for good user experiance
+            progressDialog = new ProgressDialog(MantenimientoCursoActivity.this);
+            progressDialog.setMessage("Please Wait");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            // implement API in background and store the response in current variable
+            String current = "";
+
+            try {
+                URL url;
+                HttpURLConnection urlConnection = null;
+                try {
+                    url = new URL(apiUrlDelete);
+
+                    urlConnection = (HttpURLConnection) url.openConnection();
+
+                    InputStream in = urlConnection.getInputStream();
+
+                    InputStreamReader isw = new InputStreamReader(in);
+
+                    int data = isw.read();
+                    while (data != -1) {
+                        current += (char) data;
+                        data = isw.read();
+                        //System.out.print(current);
+                    }
+                    // return the data to onPostExecute method
+                    Log.w("JSON", current);
+                    return current;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (urlConnection != null) {
+                        urlConnection.disconnect();
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "Exception: " + e.getMessage();
+            }
+            return current;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+            // dismiss the progress dialog after receiving data from API
+            progressDialog.dismiss();
+
+            mensaje = s;
+
+            Log.d("mensajeeee", s);
+        }
     }
 
     @Override
