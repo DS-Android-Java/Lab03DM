@@ -1,11 +1,18 @@
 package com.example.lab03.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -18,7 +25,13 @@ import com.example.lab03.logicaDeNegocio.Carrera;
 import com.example.lab03.logicaDeNegocio.Curso;
 import com.example.lab03.logicaDeNegocio.Profesor;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,8 +49,15 @@ public class UpdateCursoActivity extends AppCompatActivity {
     private Spinner spinnerCarrera;
     private ModelData model =  ModelData.getInstance();
 
-    //private ArrayList<String> nombresP = new ArrayList<>();
-    //private ArrayList<String> cedulaP = new ArrayList<>();
+    private List<Profesor> profesores;
+    private List<Carrera> carreras;
+
+    //Url cargar combo carreras
+    String apiUrlCargaComboCarrera = "http://192.168.0.3:8080/Backend_JSON/modelos/curso/preparaCreate?";
+
+    //Url cargar combo profesores
+    String apiUrlCargaComboProfesores = "http://192.168.0.3:8080/Backend_JSON/modelos/curso/comboProfesor?";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,22 +82,20 @@ public class UpdateCursoActivity extends AppCompatActivity {
         etCiclo.setText("");
         etHorasSemanales.setText("");
 
+        //Cargando spinners o combos
+        MyAsyncTasksCargaComboCarreras myAsyncTasksCCCarreras = new MyAsyncTasksCargaComboCarreras();
+        myAsyncTasksCCCarreras.execute();
+
+        MyAsyncTasksCargaComboProfesores myAsyncTasksCCProfesores = new MyAsyncTasksCargaComboProfesores();
+        myAsyncTasksCCProfesores.execute();
+
         //Cargado spinners o combos
         spinnerProfesor = findViewById(R.id.spinnerProfesor);
-        List<Profesor> profesores = new ArrayList<>();
-        //profesores = model.initProfesores();
-        profesores = model.getListaProfesor();
-
-        ArrayAdapter<Profesor> adaptador = new ArrayAdapter<Profesor>(this, R.layout.spinner_item_diego, profesores);
-        spinnerProfesor.setAdapter(adaptador);
+        profesores = new ArrayList<>();
 
         spinnerCarrera = findViewById(R.id.spinnerCarrera);
-        List<Carrera> carreras = new ArrayList<>();
-        carreras = model.getListaCarrera();//.initCarreras();
-
-        ArrayAdapter<Carrera> adaptadorC = new ArrayAdapter<Carrera>(this, R.layout.spinner_item_diego, carreras);
-        spinnerCarrera.setAdapter(adaptadorC);
-
+        carreras = new ArrayList<>();
+        ////////////////////
 
         //receiving data from admCursoActivity
         Bundle extras = getIntent().getExtras();
@@ -202,5 +220,157 @@ public class UpdateCursoActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    public class MyAsyncTasksCargaComboCarreras extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            // implement API in background and store the response in current variable
+            String current = "";
+
+            try {
+                URL url;
+                HttpURLConnection urlConnection = null;
+                try {
+                    url = new URL(apiUrlCargaComboCarrera);
+
+                    urlConnection = (HttpURLConnection) url.openConnection();
+
+                    ////
+                    urlConnection.setRequestMethod("GET"); // or POST
+                    urlConnection.setDoInput(true);
+                    urlConnection.setDoOutput(true);
+                    ////
+                    InputStream in = urlConnection.getInputStream();
+
+                    InputStreamReader isw = new InputStreamReader(in);
+
+                    int data = isw.read();
+                    while (data != -1) {
+                        current += (char) data;
+                        data = isw.read();
+                        //System.out.print(current);
+                    }
+                    // return the data to onPostExecute method
+                    Log.w("JSON", current);
+                    return current;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (urlConnection != null) {
+                        urlConnection.disconnect();
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "Exception: " + e.getMessage();
+            }
+            return current;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+            String jsonObjectAsString = s;
+
+            //Json
+            try {
+                Gson gson = new Gson();
+
+                carreras = (ArrayList<Carrera>) gson.fromJson(s,
+                        new TypeToken<ArrayList<Carrera>>() {
+                        }.getType());
+
+                ArrayAdapter<Carrera> adaptadorC = new ArrayAdapter<Carrera>(UpdateCursoActivity.this, R.layout.spinner_item_diego, carreras);
+                spinnerCarrera.setAdapter(adaptadorC);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public class MyAsyncTasksCargaComboProfesores extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            // implement API in background and store the response in current variable
+            String current = "";
+
+            try {
+                URL url;
+                HttpURLConnection urlConnection = null;
+                try {
+                    url = new URL(apiUrlCargaComboProfesores);
+
+                    urlConnection = (HttpURLConnection) url.openConnection();
+
+                    ////
+                    urlConnection.setRequestMethod("GET"); // or POST
+                    urlConnection.setDoInput(true);
+                    urlConnection.setDoOutput(true);
+                    ////
+                    InputStream in = urlConnection.getInputStream();
+
+                    InputStreamReader isw = new InputStreamReader(in);
+
+                    int data = isw.read();
+                    while (data != -1) {
+                        current += (char) data;
+                        data = isw.read();
+                        //System.out.print(current);
+                    }
+                    // return the data to onPostExecute method
+                    Log.w("JSON", current);
+                    return current;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (urlConnection != null) {
+                        urlConnection.disconnect();
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "Exception: " + e.getMessage();
+            }
+            return current;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+            String jsonObjectAsString = s;
+
+            //Json
+            try {
+                Gson gson = new Gson();
+
+                profesores = (ArrayList<Profesor>) gson.fromJson(s,
+                        new TypeToken<ArrayList<Profesor>>() {
+                        }.getType());
+
+                ArrayAdapter<Profesor> adaptadorP = new ArrayAdapter<Profesor>(UpdateCursoActivity.this, R.layout.spinner_item_diego, profesores);
+                spinnerProfesor.setAdapter(adaptadorP);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

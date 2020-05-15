@@ -9,29 +9,26 @@ public class Carrera implements Serializable {
     private String codCarrera;
     private String nombre;
     private String titulo;
-    private List<Curso> cursos;
 
     public Carrera(String codCarrera, String nombre, String titulo) {
         this.codCarrera = codCarrera;
         this.nombre = nombre;
         this.titulo = titulo;
-        this.cursos = new ArrayList<>();
     }
 
     public Carrera(String codCarrera, String nombre) {
         this.codCarrera = codCarrera;
         this.nombre = nombre;
         this.titulo = "Bachiller";
-        this.cursos = new ArrayList<>();
     }
 
     public Carrera() {
         codCarrera = new String();
         nombre = new String();
         titulo = new String();
-        cursos = new ArrayList<>();
     }
 
+    /*
     public void addCurso(Curso curso){
         this.cursos.add(curso);
     }
@@ -42,7 +39,7 @@ public class Carrera implements Serializable {
 
     public void setCursos(List<Curso> cursos) {
         this.cursos = cursos;
-    }
+    }*/
 
     public String getCodCarrera() {
         return codCarrera;

@@ -29,7 +29,7 @@ public class ModelData {
         listaCurso = new ArrayList<>();
         listaUsuario = new ArrayList<>();
 
-        initCarreras();
+        //initCarreras();
         //initProfesores();//por que como ya los estoy sacando de la base para que no me salgan los quemados
         //initCursos();
     }
@@ -41,7 +41,7 @@ public class ModelData {
         return modelData;
     }
 
-    public List<Carrera> initCarreras() {
+    /*public List<Carrera> initCarreras() {
         listaCarrera = new ArrayList<>();
         initCursos();
         Carrera carrera = new Carrera("EIF", "Ingeniería en Sistemas");
@@ -135,7 +135,7 @@ public class ModelData {
                 listaProfesor.get(1)));
         listaCurso.add(new Curso("HB1", "MAT","Historia Básica I", "3", "4","II","12",
                 listaProfesor.get(3)));
-    }
+    }*/
 
     public List<Usuario> getUsuariosList() {
         List<Usuario> users = new ArrayList<>();

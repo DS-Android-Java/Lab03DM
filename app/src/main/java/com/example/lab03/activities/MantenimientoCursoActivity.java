@@ -55,7 +55,15 @@ public class MantenimientoCursoActivity extends AppCompatActivity
 
     //Url eliminar
     String apiUrlDelete = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso/delete?";
-    //String apiUrl = "http://10.0.2.2:8080/Backend_JSON/modelos/curso/list";//Esta para emulador
+    //String apiUrl = "http://10.0.2.2:8080/Backend_JSON/Controlador/curso/delete?";//Esta para emulador
+
+    //Url agregar
+    String apiUrlAdd = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso/create?";
+    //String apiUrl = "http://10.0.2.2:8080/Backend_JSON/Controlador/curso/create?";//Esta para emulador
+
+    //Url actualizar
+    String apiUrlUpdate = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso/create?";
+    String apiUrlTemp;
 
     private RecyclerView mRecyclerView;
     private AdaptadorCurso mAdapter;
@@ -76,6 +84,7 @@ public class MantenimientoCursoActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         model = ModelData.getInstance();
         mensaje = "";
+        apiUrlTemp = apiUrl;
 
         //toolbar fancy stuff
         getSupportActionBar().setTitle(getString(R.string.my_curso));
@@ -97,7 +106,7 @@ public class MantenimientoCursoActivity extends AppCompatActivity
         mRecyclerView.setAdapter(mAdapter);
 
         //AsyncTask aca se usa el web service para cargar los datos de la base del profesor
-        MyAsyncTasksCurso myAsyncTasks = new MyAsyncTasksCurso();
+        MyAsyncTasksCursoOperaciones myAsyncTasks = new MyAsyncTasksCursoOperaciones();
         myAsyncTasks.execute();
 
         // go to update or add career
@@ -163,17 +172,16 @@ public class MantenimientoCursoActivity extends AppCompatActivity
         }
     }
 
-    public class MyAsyncTasksCurso extends AsyncTask<String, String, String> {
-
+    public class MyAsyncTasksCursoOperaciones extends AsyncTask<String, String, String> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             // display a progress dialog for good user experiance
-            progressDialog = new ProgressDialog(MantenimientoCursoActivity.this);
+            /*progressDialog = new ProgressDialog(MantenimientoCursoActivity.this);
             progressDialog.setMessage("Please Wait");
             progressDialog.setCancelable(false);
-            progressDialog.show();
+            progressDialog.show();*/
         }
 
         @Override
@@ -186,15 +194,10 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                 URL url;
                 HttpURLConnection urlConnection = null;
                 try {
-                    url = new URL(apiUrl);
+                    url = new URL(apiUrlTemp);
 
                     urlConnection = (HttpURLConnection) url.openConnection();
 
-                    ////
-                    urlConnection.setRequestMethod("GET"); // or POST
-                    urlConnection.setDoInput(true);
-                    urlConnection.setDoOutput(true);
-                    ////
                     InputStream in = urlConnection.getInputStream();
 
                     InputStreamReader isw = new InputStreamReader(in);
@@ -227,10 +230,9 @@ public class MantenimientoCursoActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(String s) {
 
-            //String jsonObjectAsString = "";
             String jsonObjectAsString = s;
             // dismiss the progress dialog after receiving data from API
-            progressDialog.dismiss();
+            //progressDialog.dismiss();
 
             //Json
             try {
@@ -415,12 +417,14 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                 aux = (Curso) getIntent().getSerializableExtra("editCurso");
                 if (aux != null) {
                     //found an item that can be updated
-                    boolean founded = false;
+                    apiUrlTemp = apiUrlUpdate + "codigoCurso="+aux.getCodigo()+"&IdCarrera="+aux.getCodCarrera()+"&nombre="+aux.getNombre()+"&creditos="+aux.getCreditos()
+                            +"&anio="+aux.getAnio()+"&ciclo="+aux.getCiclo()+"&hora_semanales="+aux.getHora_semanales()+"&profesor_id="+aux.getProfesor().getCedula();
+                    MyAsyncTasksCursoOperaciones myAsyncTasksOp = new MyAsyncTasksCursoOperaciones();
+                    myAsyncTasksOp.execute();
+                    Toast.makeText(getApplicationContext(), aux.getNombre() + " Editado Correctamente!", Toast.LENGTH_LONG).show();
+                    /*boolean founded = false;
                     for (Curso curso : cursoList) {
                         if (curso.getCodigo().equals(aux.getCodigo())) {
-                            /*curso.setNombre(aux.getNombre());
-                            curso.setCreditos(aux.getCreditos());
-                            curso.setHora_semanales(aux.getHora_semanales());*/
                             cursoList.remove(curso);
                             cursoList.add(aux);
                             founded = true;
@@ -432,11 +436,15 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                         Toast.makeText(getApplicationContext(), aux.getNombre() + " Editado Correctamente!", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(getApplicationContext(), aux.getNombre() + " No Encontrado!!!", Toast.LENGTH_LONG).show();
-                    }
+                    }*/
                 }
             } else {
                 //found a new Curso Object
-                cursoList.add(aux);
+                //cursoList.add(aux);
+                apiUrlTemp = apiUrlAdd + "codigoCurso="+aux.getCodigo()+"&IdCarrera="+aux.getCodCarrera()+"&nombre="+aux.getNombre()+"&creditos="+aux.getCreditos()
+                        +"&anio="+aux.getAnio()+"&ciclo="+aux.getCiclo()+"&hora_semanales="+aux.getHora_semanales()+"&profesor_id="+aux.getProfesor().getCedula();
+                MyAsyncTasksCursoOperaciones myAsyncTasksOp = new MyAsyncTasksCursoOperaciones();
+                myAsyncTasksOp.execute();
                 Toast.makeText(getApplicationContext(), aux.getNombre() + " Agregado Correctamente!", Toast.LENGTH_LONG).show();
             }
         }
