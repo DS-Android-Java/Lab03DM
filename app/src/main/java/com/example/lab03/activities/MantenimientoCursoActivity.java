@@ -62,7 +62,8 @@ public class MantenimientoCursoActivity extends AppCompatActivity
     //String apiUrl = "http://10.0.2.2:8080/Backend_JSON/Controlador/curso/create?";//Esta para emulador
 
     //Url actualizar
-    String apiUrlUpdate = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso/create?";
+    String apiUrlUpdate = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso/update?";
+    //String apiUrlUpdate = "http://10.0.2.2:8080/Backend_JSON/Controlador/curso/update?";//Esta para emulador
     String apiUrlTemp;
 
     private RecyclerView mRecyclerView;
@@ -179,7 +180,7 @@ public class MantenimientoCursoActivity extends AppCompatActivity
             super.onPreExecute();
             // display a progress dialog for good user experiance
             /*progressDialog = new ProgressDialog(MantenimientoCursoActivity.this);
-            progressDialog.setMessage("Please Wait");
+            progressDialog.setMessage("Por favor espere");
             progressDialog.setCancelable(false);
             progressDialog.show();*/
         }
@@ -206,7 +207,6 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                     while (data != -1) {
                         current += (char) data;
                         data = isw.read();
-                        //System.out.print(current);
                     }
                     // return the data to onPostExecute method
                     Log.w("JSON", current);
@@ -259,6 +259,7 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                 e.printStackTrace();
             }
             //tvData.setText(s);
+            Log.d("JSONJEJE",s);
         }
 
     }
@@ -408,7 +409,7 @@ public class MantenimientoCursoActivity extends AppCompatActivity
         Toast.makeText(getApplicationContext(), "Selected: " + curso.getCodigo() + ", " + curso.getNombre(), Toast.LENGTH_LONG).show();
     }
 
-    private void checkIntentInformation() {//Aca se realiza el update y el add
+    private void checkIntentInformation() {//Aca se realiza el update y el add en la base
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             Curso aux;
@@ -422,25 +423,9 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                     MyAsyncTasksCursoOperaciones myAsyncTasksOp = new MyAsyncTasksCursoOperaciones();
                     myAsyncTasksOp.execute();
                     Toast.makeText(getApplicationContext(), aux.getNombre() + " Editado Correctamente!", Toast.LENGTH_LONG).show();
-                    /*boolean founded = false;
-                    for (Curso curso : cursoList) {
-                        if (curso.getCodigo().equals(aux.getCodigo())) {
-                            cursoList.remove(curso);
-                            cursoList.add(aux);
-                            founded = true;
-                            break;
-                        }
-                    }
-                    //check if exist
-                    if (founded) {
-                        Toast.makeText(getApplicationContext(), aux.getNombre() + " Editado Correctamente!", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), aux.getNombre() + " No Encontrado!!!", Toast.LENGTH_LONG).show();
-                    }*/
                 }
             } else {
                 //found a new Curso Object
-                //cursoList.add(aux);
                 apiUrlTemp = apiUrlAdd + "codigoCurso="+aux.getCodigo()+"&IdCarrera="+aux.getCodCarrera()+"&nombre="+aux.getNombre()+"&creditos="+aux.getCreditos()
                         +"&anio="+aux.getAnio()+"&ciclo="+aux.getCiclo()+"&hora_semanales="+aux.getHora_semanales()+"&profesor_id="+aux.getProfesor().getCedula();
                 MyAsyncTasksCursoOperaciones myAsyncTasksOp = new MyAsyncTasksCursoOperaciones();

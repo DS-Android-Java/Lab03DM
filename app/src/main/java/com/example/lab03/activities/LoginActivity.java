@@ -7,6 +7,7 @@ import android.annotation.TargetApi;
 import androidx.annotation.NonNull;
 
 import android.app.LoaderManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -36,7 +38,13 @@ import com.example.lab03.R;
 import com.example.lab03.accesoDatos.ModelData;
 import com.example.lab03.logicaDeNegocio.Usuario;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +68,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
     private UserLoginTask mAuthTask = null;
     private SharedPreferences prefs;
     private Usuario usuario;
+    private ArrayList<Usuario> usuariosList;
+    String apiUrlLogin = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso/login?";
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -76,6 +86,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
         prefs = this.getSharedPreferences(getString(R.string.preference_user_key), Context.MODE_PRIVATE); // Setting up shared preferences
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);   // Set up the login form.
         populateAutoComplete();
+
+        usuariosList = new ArrayList<>();
+
+        MyAsyncTasks myAsyncTasks = new MyAsyncTasks();
+        myAsyncTasks.execute();
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -100,14 +115,89 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
     }
 
     private ArrayList<Usuario> searchUsers() {
-        ArrayList<Usuario> usuariosList = (ArrayList<Usuario>) model.getUsuariosList();
-        //administrador
-        /*usuariosList.add(new Usuario("@diego", "diego", "administrador"));
-        usuariosList.add(new Usuario("@allison", "allimv", "administrador"));
-        //matriculador
-        usuariosList.add(new Usuario("@vane", "vanessa", "matriculador"));*/
-
         return usuariosList;
+    }
+
+    public class MyAsyncTasks extends AsyncTask<String, String, String> {
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // display a progress dialog for good user experiance
+            /*progressDialog = new ProgressDialog(LoginActivity.this);
+            progressDialog.setMessage("Please Wait");
+            progressDialog.setCancelable(false);
+            progressDialog.show();*/
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            // implement API in background and store the response in current variable
+            String current = "";
+
+            try {
+                URL url;
+                HttpURLConnection urlConnection = null;
+                try {
+                    url = new URL(apiUrlLogin);
+
+                    urlConnection = (HttpURLConnection) url.openConnection();
+
+                    ////
+                    urlConnection.setRequestMethod("GET"); // or POST
+                    urlConnection.setDoInput(true);
+                    urlConnection.setDoOutput(true);
+                    ////
+                    InputStream in = urlConnection.getInputStream();
+
+                    InputStreamReader isw = new InputStreamReader(in);
+
+                    int data = isw.read();
+                    while (data != -1) {
+                        current += (char) data;
+                        data = isw.read();
+                        //System.out.print(current);
+                    }
+                    // return the data to onPostExecute method
+                    Log.w("JSON",current);
+                    return current;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (urlConnection != null) {
+                        urlConnection.disconnect();
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "Exception: " + e.getMessage();
+            }
+            return current;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+            String jsonObjectAsString = s;
+            // dismiss the progress dialog after receiving data from API
+
+            //Json
+            try{
+                Gson gson = new Gson();
+
+                usuariosList = (ArrayList<Usuario>) gson.fromJson(s,
+                        new TypeToken<ArrayList<Usuario>>(){}.getType());
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            Log.d("usuariosss","" +usuariosList.size());
+        }
+
     }
 
     private void populateAutoComplete() {
@@ -184,7 +274,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
 
     private boolean isUsuarioValid(String usuario) {
         //TODO: Replace this with your own logic
-        return usuario.contains("@");
+        return !usuario.isEmpty();
     }
 
     private boolean isPasswordValid(String password) {
@@ -320,7 +410,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
             if (success) {//Si correrponden el usuario y la clave puede ingresar
                 finish();
                 //putting user on shared preferences
-                prefs.edit().putString((getString(R.string.preference_user_key)), usuario.getRol()).apply();
+                String rol = "";
+                if(usuario.getRol().equals("1")){
+                    rol = "administrador";
+                }
+                prefs.edit().putString((getString(R.string.preference_user_key)),rol).apply();
                 Intent intent = new Intent(LoginActivity.this, NavDrawerActivity.class);//Entra al nav drawer
                 LoginActivity.this.startActivity(intent);
             } else {

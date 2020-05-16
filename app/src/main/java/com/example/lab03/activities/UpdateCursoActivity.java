@@ -47,7 +47,8 @@ public class UpdateCursoActivity extends AppCompatActivity {
     private EditText etHorasSemanales;
     private Spinner spinnerProfesor;
     private Spinner spinnerCarrera;
-    private ModelData model =  ModelData.getInstance();
+    ArrayAdapter<Profesor> adaptadorP;
+    ArrayAdapter<Carrera> adaptadorC;
 
     private List<Profesor> profesores;
     private List<Carrera> carreras;
@@ -111,6 +112,8 @@ public class UpdateCursoActivity extends AppCompatActivity {
                 etCiclo.setText(aux.getCiclo());
                 etCreditos.setText(aux.getCreditos());
                 etHorasSemanales.setText(aux.getHora_semanales());
+                //spinnerProfesor.setSelection(adaptadorP.getPosition(aux.getProfesor()));
+                //spinnerCarrera.setSelection(adaptadorC.getPosition(aux.getCodCarrera()));
                 //edit action
                 fBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -290,7 +293,7 @@ public class UpdateCursoActivity extends AppCompatActivity {
                         new TypeToken<ArrayList<Carrera>>() {
                         }.getType());
 
-                ArrayAdapter<Carrera> adaptadorC = new ArrayAdapter<Carrera>(UpdateCursoActivity.this, R.layout.spinner_item_diego, carreras);
+                adaptadorC = new ArrayAdapter<Carrera>(UpdateCursoActivity.this, R.layout.spinner_item_diego, carreras);
                 spinnerCarrera.setAdapter(adaptadorC);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -366,7 +369,7 @@ public class UpdateCursoActivity extends AppCompatActivity {
                         new TypeToken<ArrayList<Profesor>>() {
                         }.getType());
 
-                ArrayAdapter<Profesor> adaptadorP = new ArrayAdapter<Profesor>(UpdateCursoActivity.this, R.layout.spinner_item_diego, profesores);
+                adaptadorP = new ArrayAdapter<Profesor>(UpdateCursoActivity.this, R.layout.spinner_item_diego, profesores);
                 spinnerProfesor.setAdapter(adaptadorP);
             } catch (Exception e) {
                 e.printStackTrace();

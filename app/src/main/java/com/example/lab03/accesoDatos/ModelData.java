@@ -135,7 +135,7 @@ public class ModelData {
                 listaProfesor.get(1)));
         listaCurso.add(new Curso("HB1", "MAT","Historia Básica I", "3", "4","II","12",
                 listaProfesor.get(3)));
-    }*/
+    }
 
     public List<Usuario> getUsuariosList() {
         List<Usuario> users = new ArrayList<>();
@@ -143,7 +143,7 @@ public class ModelData {
         users.add(new Usuario("@allison", "allimv", "administrador"));
         users.add(new Usuario("@vane", "vanessa", "matriculador"));
         return users;
-    }
+    }*/
 
     public List<Profesor> getListaProfesor() {
         return listaProfesor;
