@@ -53,17 +53,10 @@ public class MantenimientoCursoActivity extends AppCompatActivity
     String apiUrl = "http://192.168.0.3:8080/Backend_JSON/modelos/curso/list?";
     //String apiUrl = "http://10.0.2.2:8080/Backend_JSON/modelos/curso/list";//Esta para emulador
 
-    //Url eliminar
-    String apiUrlDelete = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso/delete?";
-    //String apiUrl = "http://10.0.2.2:8080/Backend_JSON/Controlador/curso/delete?";//Esta para emulador
-
     //Url agregar
-    String apiUrlAdd = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso/create?";
-    //String apiUrl = "http://10.0.2.2:8080/Backend_JSON/Controlador/curso/create?";//Esta para emulador
+    String apiUrlAcciones = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso?";
+    //String apiUrl = "http://10.0.2.2:8080/Backend_JSON/Controlador/curso?";//Esta para emulador
 
-    //Url actualizar
-    String apiUrlUpdate = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso/update?";
-    //String apiUrlUpdate = "http://10.0.2.2:8080/Backend_JSON/Controlador/curso/update?";//Esta para emulador
     String apiUrlTemp;
 
     private RecyclerView mRecyclerView;
@@ -140,9 +133,10 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                 String name = cursoList.get(viewHolder.getAdapterPosition()).getNombre();
                 String idCurso = cursoList.get(viewHolder.getAdapterPosition()).getCodigo();
 
-                apiUrlDelete = apiUrlDelete + "id_Curso=" + idCurso;
-                MyAsyncTasksCursoDelete myAsyncTasksCursoDelete = new MyAsyncTasksCursoDelete();
-                myAsyncTasksCursoDelete.execute();
+                apiUrlTemp = apiUrlAcciones + "acc=deleteC"+ "&id_Curso=" + idCurso;
+
+                MyAsyncTasksCursoOperaciones myAsyncTasksCursoOperaciones = new MyAsyncTasksCursoOperaciones();
+                myAsyncTasksCursoOperaciones.execute();
 
                 // save the index deleted
                 final int deletedIndex = viewHolder.getAdapterPosition();
@@ -258,77 +252,10 @@ public class MantenimientoCursoActivity extends AppCompatActivity
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            //tvData.setText(s);
+
             Log.d("JSONJEJE",s);
         }
 
-    }
-
-    public class MyAsyncTasksCursoDelete extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // display a progress dialog for good user experiance
-            progressDialog = new ProgressDialog(MantenimientoCursoActivity.this);
-            progressDialog.setMessage("Please Wait");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            // implement API in background and store the response in current variable
-            String current = "";
-
-            try {
-                URL url;
-                HttpURLConnection urlConnection = null;
-                try {
-                    url = new URL(apiUrlDelete);
-
-                    urlConnection = (HttpURLConnection) url.openConnection();
-
-                    InputStream in = urlConnection.getInputStream();
-
-                    InputStreamReader isw = new InputStreamReader(in);
-
-                    int data = isw.read();
-                    while (data != -1) {
-                        current += (char) data;
-                        data = isw.read();
-                        //System.out.print(current);
-                    }
-                    // return the data to onPostExecute method
-                    Log.w("JSON", current);
-                    return current;
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if (urlConnection != null) {
-                        urlConnection.disconnect();
-                    }
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return "Exception: " + e.getMessage();
-            }
-            return current;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-
-            // dismiss the progress dialog after receiving data from API
-            progressDialog.dismiss();
-
-            mensaje = s;
-
-            Log.d("mensajeeee", s);
-        }
     }
 
     @Override
@@ -416,17 +343,17 @@ public class MantenimientoCursoActivity extends AppCompatActivity
             aux = (Curso) getIntent().getSerializableExtra("addCurso");
             if (aux == null) {
                 aux = (Curso) getIntent().getSerializableExtra("editCurso");
-                if (aux != null) {
+                if (aux != null) {//Accion de actualizar
                     //found an item that can be updated
-                    apiUrlTemp = apiUrlUpdate + "codigoCurso="+aux.getCodigo()+"&IdCarrera="+aux.getCodCarrera()+"&nombre="+aux.getNombre()+"&creditos="+aux.getCreditos()
+                    apiUrlTemp = apiUrlAcciones+"acc=updateC" + "&codigoCurso="+aux.getCodigo()+"&IdCarrera="+aux.getCodCarrera()+"&nombre="+aux.getNombre()+"&creditos="+aux.getCreditos()
                             +"&anio="+aux.getAnio()+"&ciclo="+aux.getCiclo()+"&hora_semanales="+aux.getHora_semanales()+"&profesor_id="+aux.getProfesor().getCedula();
                     MyAsyncTasksCursoOperaciones myAsyncTasksOp = new MyAsyncTasksCursoOperaciones();
                     myAsyncTasksOp.execute();
                     Toast.makeText(getApplicationContext(), aux.getNombre() + " Editado Correctamente!", Toast.LENGTH_LONG).show();
                 }
-            } else {
+            } else {//Accion de agregar
                 //found a new Curso Object
-                apiUrlTemp = apiUrlAdd + "codigoCurso="+aux.getCodigo()+"&IdCarrera="+aux.getCodCarrera()+"&nombre="+aux.getNombre()+"&creditos="+aux.getCreditos()
+                apiUrlTemp = apiUrlAcciones +"acc=addC"+ "&codigoCurso="+aux.getCodigo()+"&IdCarrera="+aux.getCodCarrera()+"&nombre="+aux.getNombre()+"&creditos="+aux.getCreditos()
                         +"&anio="+aux.getAnio()+"&ciclo="+aux.getCiclo()+"&hora_semanales="+aux.getHora_semanales()+"&profesor_id="+aux.getProfesor().getCedula();
                 MyAsyncTasksCursoOperaciones myAsyncTasksOp = new MyAsyncTasksCursoOperaciones();
                 myAsyncTasksOp.execute();
