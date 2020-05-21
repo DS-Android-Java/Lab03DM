@@ -36,6 +36,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONObject;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -47,12 +49,12 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
         implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener, AdaptadorProfesor.AdaptadorProfesorListener  {
 
     //Url listar
-    //String apiUrl = "http://192.168.0.3:8080/Backend_JSON/modelos/profesor/list?";//Esta para mi celular ip de mi compu la ipv4 de mi LAN
-    String apiUrl = "http://10.0.2.2:8080/Backend_JSON/modelos/profesor/list";//Esta para emulador
+    String apiUrl = "http://192.168.0.3:8080/Backend_JSON/modelos/profesor/list?";//Esta para mi celular ip de mi compu la ipv4 de mi LAN
+    //String apiUrl = "http://10.0.2.2:8080/Backend_JSON/modelos/profesor/list";//Esta para emulador
 
     //Url agregar
-    //String apiUrlAcciones= "http://192.168.0.3:8080/Backend_JSON/Controlador/profesor?";
-    String apiUrlAcciones= "http://10.0.2.2:8080/Backend_JSON/Controlador/profesor?"; //Esta para emulador
+    String apiUrlAcciones= "http://192.168.0.3:8080/Backend_JSON/Controlador/profesor?";
+    //String apiUrlAcciones= "http://10.0.2.2:8080/Backend_JSON/Controlador/profesor?"; //Esta para emulador
 
     String apiUrlTemp;
 
@@ -195,8 +197,10 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
                 String cedula = profesorList.get(viewHolder.getAdapterPosition()).getCedula();
 
                 apiUrlTemp = apiUrlAcciones + "app=deleteP" + "&id_Profe=" + cedula;
-                MyAsyncTasks myAsyncTasks = new MyAsyncTasks();
-                myAsyncTasks.execute();
+                //MyAsyncTasks myAsyncTasks = new MyAsyncTasks();
+                //myAsyncTasks.execute();
+                MyAsyncTasksDeleteProfe myAsyncTasksDeleteProfe = new MyAsyncTasksDeleteProfe();
+                myAsyncTasksDeleteProfe.execute();
 
                 //save the index deleted
                 final int deletedIndex = viewHolder.getAdapterPosition();
@@ -204,7 +208,7 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
                 adaptadorProfesor.removeItem(viewHolder.getAdapterPosition());
 
                 // showing snack bar with Undo option
-                Snackbar snackbar = Snackbar.make(coordinatorLayout,name+ mensaje, Snackbar.LENGTH_LONG);
+                /*Snackbar snackbar = Snackbar.make(coordinatorLayout,name+ mensaje, Snackbar.LENGTH_LONG);
                 snackbar.setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -213,7 +217,7 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
                     }
                 });
                 snackbar.setActionTextColor(Color.YELLOW);
-                snackbar.show();
+                snackbar.show();*/
             }
         } else {   //If is editing a row object
             Profesor aux = adaptadorProfesor.getSwipedItem(viewHolder.getAdapterPosition());
@@ -320,6 +324,89 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
 
     }
 
+    public class MyAsyncTasksDeleteProfe extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // display a progress dialog for good user experiance
+            /*progressDialog = new ProgressDialog(MantenimientoProfesorActivity.this);
+            progressDialog.setMessage("Please Wait");
+            progressDialog.setCancelable(false);
+            progressDialog.show();*/
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            // implement API in background and store the response in current variable
+            String current = "";
+
+
+            try {
+                URL url;
+                HttpURLConnection urlConnection = null;
+                try {
+                    url = new URL(apiUrlTemp);
+
+                    urlConnection = (HttpURLConnection) url.openConnection();
+
+                    InputStream in = urlConnection.getInputStream();
+
+                    InputStreamReader isw = new InputStreamReader(in);
+
+                    int data = isw.read();
+                    while (data != -1) {
+                        current += (char) data;
+                        data = isw.read();
+                    }
+
+                    // return the data to onPostExecute method
+                    Log.w("JSON",current);
+                    return current;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (urlConnection != null) {
+                        urlConnection.disconnect();
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "Exception: " + e.getMessage();
+            }
+            return current;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+            // dismiss the progress dialog after receiving data from API
+            //progressDialog.dismiss();
+
+            //Json
+            try{
+                Gson gson = new Gson();
+
+                JSONObject jsonObjectMensaje = new JSONObject(s);
+                boolean estado = jsonObjectMensaje.getBoolean("error");
+                String mensaje = jsonObjectMensaje.getString("mensaje");
+                //Se muestra el mensaje de estado de operacion
+                Toast.makeText(MantenimientoProfesorActivity.this,mensaje,Toast.LENGTH_LONG).show();
+
+                //Y se recarga la lista de profesores
+                apiUrlTemp = apiUrl;
+                MyAsyncTasks myAsyncTasks = new MyAsyncTasks();
+                myAsyncTasks.execute();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            Log.d("JSONMENSAJE",s);
+        }
+
+    }
 
     @Override
     public void onItemMove(int source, int target) { adaptadorProfesor.onItemMove(source, target); }

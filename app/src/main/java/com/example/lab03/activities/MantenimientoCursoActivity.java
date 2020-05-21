@@ -50,12 +50,12 @@ public class MantenimientoCursoActivity extends AppCompatActivity
         implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener, AdaptadorCurso.AdaptadorCursoListener {
 
     //Url listar
-    //String apiUrl = "http://192.168.0.3:8080/Backend_JSON/modelos/curso/list?";
-    String apiUrl = "http://10.0.2.2:8080/Backend_JSON/modelos/curso/list";//Esta para emulador
+    String apiUrl = "http://192.168.0.3:8080/Backend_JSON/modelos/curso/list?";
+    //String apiUrl = "http://10.0.2.2:8080/Backend_JSON/modelos/curso/list";//Esta para emulador
 
     //Url agregar
-    //String apiUrlAcciones = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso?";
-    String apiUrlAcciones = "http://10.0.2.2:8080/Backend_JSON/Controlador/curso?";//Esta para emulador
+    String apiUrlAcciones = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso?";
+    //String apiUrlAcciones = "http://10.0.2.2:8080/Backend_JSON/Controlador/curso?";//Esta para emulador
 
     String apiUrlTemp;
 
@@ -144,7 +144,7 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                 mAdapter.removeItem(viewHolder.getAdapterPosition());
 
                 // showing snack bar with Undo option
-                Snackbar snackbar = Snackbar.make(coordinatorLayout, name + mensaje, Snackbar.LENGTH_LONG);
+                /*Snackbar snackbar = Snackbar.make(coordinatorLayout, name + mensaje, Snackbar.LENGTH_LONG);
                 snackbar.setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -153,7 +153,7 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                     }
                 });
                 snackbar.setActionTextColor(Color.YELLOW);
-                snackbar.show();
+                snackbar.show();*/
             }
         } else {
             //If is editing a row object
