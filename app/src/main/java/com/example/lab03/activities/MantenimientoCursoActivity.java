@@ -338,6 +338,7 @@ public class MantenimientoCursoActivity extends AppCompatActivity
 
     private void checkIntentInformation() {//Aca se realiza el update y el add en la base
         Bundle extras = getIntent().getExtras();
+        Gson gson = new Gson();
         if (extras != null) {
             Curso aux;
             aux = (Curso) getIntent().getSerializableExtra("addCurso");
@@ -345,16 +346,20 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                 aux = (Curso) getIntent().getSerializableExtra("editCurso");
                 if (aux != null) {//Accion de actualizar
                     //found an item that can be updated
-                    apiUrlTemp = apiUrlAcciones+"acc=updateC" + "&codigoCurso="+aux.getCodigo()+"&IdCarrera="+aux.getCodCarrera()+"&nombre="+aux.getNombre()+"&creditos="+aux.getCreditos()
-                            +"&anio="+aux.getAnio()+"&ciclo="+aux.getCiclo()+"&hora_semanales="+aux.getHora_semanales()+"&profesor_id="+aux.getProfesor().getCedula();
+                    String cursoU = "";
+                    cursoU = gson.toJson(aux);
+
+                    apiUrlTemp = apiUrlAcciones+"acc=updateC" +"&cursoU="+cursoU +"&profesor_id="+aux.getProfesor().getCedula();
                     MyAsyncTasksCursoOperaciones myAsyncTasksOp = new MyAsyncTasksCursoOperaciones();
                     myAsyncTasksOp.execute();
                     Toast.makeText(getApplicationContext(), aux.getNombre() + " Editado Correctamente!", Toast.LENGTH_LONG).show();
                 }
             } else {//Accion de agregar
                 //found a new Curso Object
-                apiUrlTemp = apiUrlAcciones +"acc=addC"+ "&codigoCurso="+aux.getCodigo()+"&IdCarrera="+aux.getCodCarrera()+"&nombre="+aux.getNombre()+"&creditos="+aux.getCreditos()
-                        +"&anio="+aux.getAnio()+"&ciclo="+aux.getCiclo()+"&hora_semanales="+aux.getHora_semanales()+"&profesor_id="+aux.getProfesor().getCedula();
+                String cursoA = "";
+                cursoA = gson.toJson(aux);
+
+                apiUrlTemp = apiUrlAcciones+"acc=addC" +"&cursoA="+cursoA +"&profesor_id="+aux.getProfesor().getCedula();
                 MyAsyncTasksCursoOperaciones myAsyncTasksOp = new MyAsyncTasksCursoOperaciones();
                 myAsyncTasksOp.execute();
                 Toast.makeText(getApplicationContext(), aux.getNombre() + " Agregado Correctamente!", Toast.LENGTH_LONG).show();
