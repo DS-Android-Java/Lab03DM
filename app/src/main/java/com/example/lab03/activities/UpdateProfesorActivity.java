@@ -16,6 +16,8 @@ import com.example.lab03.accesoDatos.ModelData;
 import com.example.lab03.logicaDeNegocio.Profesor;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.List;
+
 public class UpdateProfesorActivity extends AppCompatActivity {
 
 
@@ -25,7 +27,7 @@ public class UpdateProfesorActivity extends AppCompatActivity {
     private EditText etNombreP;
     private  EditText etTelefono;
     private EditText etEmail;
-    private ModelData modelData = ModelData.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

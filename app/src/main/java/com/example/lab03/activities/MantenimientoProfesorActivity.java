@@ -46,8 +46,15 @@ import java.util.List;
 public class MantenimientoProfesorActivity extends AppCompatActivity
         implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener, AdaptadorProfesor.AdaptadorProfesorListener  {
 
-    String apiUrl = "http://192.168.0.3:8080/Backend_JSON/modelos/profesor/list?";//Esta para mi celular ip de mi compu la ipv4 de mi LAN
-    //String apiUrl = "http://10.0.2.2:8080/Backend_JSON/modelos/profesor/list";//Esta para emulador
+    //Url listar
+    //String apiUrl = "http://192.168.0.3:8080/Backend_JSON/modelos/profesor/list?";//Esta para mi celular ip de mi compu la ipv4 de mi LAN
+    String apiUrl = "http://10.0.2.2:8080/Backend_JSON/modelos/profesor/list";//Esta para emulador
+
+    //Url agregar
+    //String apiUrlAcciones= "http://192.168.0.3:8080/Backend_JSON/Controlador/profesor?";
+    String apiUrlAcciones= "http://10.0.2.2:8080/Backend_JSON/Controlador/profesor?"; //Esta para emulador
+
+    String apiUrlTemp;
 
     private RecyclerView mRecyclerView;
     private AdaptadorProfesor adaptadorProfesor;
@@ -57,6 +64,7 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
     private FloatingActionButton floatingActionButton;
     ProgressDialog progressDialog;
     private ModelData modelData;
+    private String mensaje;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +73,9 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbarP);
         setSupportActionBar(toolbar);
         modelData = ModelData.getInstance();
+        mensaje = "";
+        apiUrlTemp = apiUrl;
+
 
         getSupportActionBar().setTitle("Profesores");
         mRecyclerView = findViewById(R.id.recycler_profesoresFld);
@@ -75,6 +86,7 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
         coordinatorLayout = findViewById(R.id.constraint_layoutP);
 
         whiteNotificationBar(mRecyclerView);
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -91,6 +103,7 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
             @Override
             public void onClick(View v) { goToAddUpdProfesor(); }
         });
+
 
         //delete swiping left and right
         ItemTouchHelper.SimpleCallback simpleCallback = new RecyclerItemTouchHelper(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, this);
@@ -179,14 +192,19 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
             if(viewHolder instanceof  AdaptadorProfesor.MyViewHolder){
                 // get the removed item name to display it in snack bar
                 String name = profesorList.get(viewHolder.getAdapterPosition()).getNombre();
+                String cedula = profesorList.get(viewHolder.getAdapterPosition()).getCedula();
 
-                // save the index deleted
+                apiUrlTemp = apiUrlAcciones + "app=deleteP" + "&id_Profe=" + cedula;
+                MyAsyncTasks myAsyncTasks = new MyAsyncTasks();
+                myAsyncTasks.execute();
+
+                //save the index deleted
                 final int deletedIndex = viewHolder.getAdapterPosition();
                 // remove the item from recyclerView
                 adaptadorProfesor.removeItem(viewHolder.getAdapterPosition());
 
                 // showing snack bar with Undo option
-                Snackbar snackbar = Snackbar.make(coordinatorLayout,name+" Removido!", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(coordinatorLayout,name+ mensaje, Snackbar.LENGTH_LONG);
                 snackbar.setAction("UNDO", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -198,7 +216,6 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
                 snackbar.show();
             }
         } else {   //If is editing a row object
-
             Profesor aux = adaptadorProfesor.getSwipedItem(viewHolder.getAdapterPosition());
             //send data to Edit Activity
             Intent intent = new Intent(this, UpdateProfesorActivity.class);
@@ -216,10 +233,10 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
         protected void onPreExecute() {
             super.onPreExecute();
             // display a progress dialog for good user experiance
-            progressDialog = new ProgressDialog(MantenimientoProfesorActivity.this);
+            /*progressDialog = new ProgressDialog(MantenimientoProfesorActivity.this);
             progressDialog.setMessage("Please Wait");
             progressDialog.setCancelable(false);
-            progressDialog.show();
+            progressDialog.show();*/
         }
 
         @Override
@@ -228,19 +245,15 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
             // implement API in background and store the response in current variable
             String current = "";
 
+
             try {
                 URL url;
                 HttpURLConnection urlConnection = null;
                 try {
-                    url = new URL(apiUrl);
+                    url = new URL(apiUrlTemp);
 
                     urlConnection = (HttpURLConnection) url.openConnection();
 
-                    ////
-                    urlConnection.setRequestMethod("GET"); // or POST
-                    urlConnection.setDoInput(true);
-                    urlConnection.setDoOutput(true);
-                    ////
                     InputStream in = urlConnection.getInputStream();
 
                     InputStreamReader isw = new InputStreamReader(in);
@@ -249,8 +262,8 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
                     while (data != -1) {
                         current += (char) data;
                         data = isw.read();
-                        //System.out.print(current);
                     }
+
                     // return the data to onPostExecute method
                     Log.w("JSON",current);
                     return current;
@@ -273,21 +286,12 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(String s) {
 
-            //String jsonObjectAsString = "";
             String jsonObjectAsString = s;
             // dismiss the progress dialog after receiving data from API
-            progressDialog.dismiss();
+            //progressDialog.dismiss();
 
             //Json
-            /*try {
-                JSONObject jsonObject = new JSONObject(s.toString());//Creamos el objeto JSON
-                JSONArray jArray = jsonObject.getJSONArray("fruits");//Sacamos el array de json del objeto creado anteriormente
-                for (int i=0; i<jArray.length();i++){//Se recorre array de json
-                    jsonObjectAsString = jsonObjectAsString + jArray.getString(i) + " ";
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }*/
+
             try{
                 Gson gson = new Gson();
 
@@ -297,9 +301,10 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
                 adaptadorProfesor = new AdaptadorProfesor(profesorList, MantenimientoProfesorActivity.this);
                 coordinatorLayout = findViewById(R.id.constraint_layoutP);
 
+
                 //white background notification bar
                 whiteNotificationBar(mRecyclerView);
-                Log.d("dataPUTOS", jsonObjectAsString);
+                Log.d("dataProfes", jsonObjectAsString);
 
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
                 mRecyclerView.setLayoutManager(mLayoutManager);
@@ -310,7 +315,7 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
             }catch (Exception e){
                 e.printStackTrace();
             }
-            //tvData.setText(s);
+            Log.d("JSONP",s);
         }
 
     }
@@ -321,33 +326,31 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
 
     private void checkIntentInformation() {//Aca se realiza el update y el add
         Bundle extras = getIntent().getExtras();
+        Gson gson = new Gson();
         if (extras != null) {
             Profesor aux;
             aux = (Profesor) getIntent().getSerializableExtra("addProfesor");
             if (aux == null) {
                 aux = (Profesor) getIntent().getSerializableExtra("editProfesor");
-                if (aux != null) {
+                if (aux != null) { //Accion de actualizar profesor
                     //found an item that can be updated
-                    boolean founded = false;
-                    for (Profesor profesor : profesorList) {
-                        if (profesor.getCedula().equals(aux.getCedula())) {
-                            profesorList.remove(profesor);
-                            profesorList.add(aux);
-                            founded = true;
-                            break;
-                        }
-                    }
-                    //check if exist
-                    if (founded) {
-                        Toast.makeText(getApplicationContext(), aux.getNombre() + " Editado Correctamente!", Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), aux.getNombre() + " No Encontrado!!!", Toast.LENGTH_LONG).show();
-                    }
+                    String profeU = "";
+                    profeU = gson.toJson(aux);
+
+                    apiUrlTemp = apiUrlAcciones+ "app=updateP" +"&profeU=" + profeU;
+                    MyAsyncTasks myAsyncTasks = new MyAsyncTasks();
+                    myAsyncTasks.execute();
+                    Toast.makeText(getApplicationContext(), aux.getNombre() + "Editado Correctamente!", Toast.LENGTH_LONG).show();
                 }
-            } else {
+            } else { //Accion de agregar profesor
                 //found a new Profesor Object
-               profesorList.add(aux);
-                Toast.makeText(getApplicationContext(), aux.getNombre() + " Agregado Correctamente!", Toast.LENGTH_LONG).show();
+            String profeA = "";
+            profeA = gson.toJson(aux);
+
+            apiUrlTemp = apiUrlAcciones+"app=addP" + "&profeA=" + profeA;
+            MyAsyncTasks myAsyncTasks = new MyAsyncTasks();
+            myAsyncTasks.execute();
+            Toast.makeText(getApplicationContext(), aux.getNombre()+"Agregado Correctamente!", Toast.LENGTH_LONG).show();
             }
         }
     }

@@ -69,7 +69,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
     private SharedPreferences prefs;
     private Usuario usuario;
     private ArrayList<Usuario> usuariosList;
-    String apiUrlLogin = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso/login?";
+    //String apiUrlLogin = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso/login?";
+    String apiUrlLogin = "http://10.0.2.2:8080/Backend_JSON/Controlador/curso/login?";//Esta para emulador
+
 
     // UI references.
     private AutoCompleteTextView mEmailView;
