@@ -98,8 +98,8 @@ public class MantenimientoCursoActivity extends AppCompatActivity
         mRecyclerView.setAdapter(mAdapter);
 
         //AsyncTask aca se usa el web service para cargar los datos de la base del profesor
-        MyAsyncTasksCurso myAsyncTasksC = new MyAsyncTasksCurso();
-        myAsyncTasksC.execute();
+        MyAsyncTasksCursoOperaciones myAsyncTasksOC = new MyAsyncTasksCursoOperaciones();
+        myAsyncTasksOC.execute();
 
         // go to update or add career
         fab = findViewById(R.id.addBtnC);
@@ -165,97 +165,6 @@ public class MantenimientoCursoActivity extends AppCompatActivity
         }
     }
 
-    public class MyAsyncTasksCurso extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // display a progress dialog for good user experiance
-            /*progressDialog = new ProgressDialog(MantenimientoCursoActivity.this);
-            progressDialog.setMessage("Por favor espere");
-            progressDialog.setCancelable(false);
-            progressDialog.show();*/
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            // implement API in background and store the response in current variable
-            String current = "";
-
-            try {
-                URL url;
-                HttpURLConnection urlConnection = null;
-                try {
-                    url = new URL(apiUrlTemp);
-
-                    urlConnection = (HttpURLConnection) url.openConnection();
-
-                    InputStream in = urlConnection.getInputStream();
-
-                    InputStreamReader isw = new InputStreamReader(in);
-
-                    int data = isw.read();
-                    while (data != -1) {
-                        current += (char) data;
-                        data = isw.read();
-                    }
-                    // return the data to onPostExecute method
-                    Log.w("JSON", current);
-                    return current;
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if (urlConnection != null) {
-                        urlConnection.disconnect();
-                    }
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return "Exception: " + e.getMessage();
-            }
-            return current;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-
-            String jsonObjectAsString = s;
-            // dismiss the progress dialog after receiving data from API
-            //progressDialog.dismiss();
-
-            //Json
-            try {
-                Gson gson = new Gson();
-
-                cursoList = (ArrayList<Curso>) gson.fromJson(s,
-                        new TypeToken<ArrayList<Curso>>() {
-                        }.getType());
-
-                mAdapter = new AdaptadorCurso(cursoList, MantenimientoCursoActivity.this);
-                coordinatorLayout = findViewById(R.id.coordinator_layoutC);
-
-                //white background notification bar
-                whiteNotificationBar(mRecyclerView);
-                Log.d("dataCursos", jsonObjectAsString);
-
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-                mRecyclerView.setLayoutManager(mLayoutManager);
-                mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                mRecyclerView.addItemDecoration(new DividerItemDecoration(MantenimientoCursoActivity.this, DividerItemDecoration.VERTICAL));
-                mRecyclerView.setAdapter(mAdapter);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            Log.d("JSONJEJE",s);
-        }
-
-    }
-
     public class MyAsyncTasksCursoOperaciones extends AsyncTask<String, String, String> {
 
         @Override
@@ -314,7 +223,6 @@ public class MantenimientoCursoActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(String s) {
-
             // dismiss the progress dialog after receiving data from API
             //progressDialog.dismiss();
 
@@ -325,13 +233,31 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                 JSONObject jsonObjectMensaje = new JSONObject(s);
                 boolean estado = jsonObjectMensaje.getBoolean("error");
                 String mensaje = jsonObjectMensaje.getString("mensaje");
+                String listC = jsonObjectMensaje.getString("listCur");
                 //Se muestra el mensaje de estado de operacion
                 Toast.makeText(MantenimientoCursoActivity.this,mensaje,Toast.LENGTH_LONG).show();
 
+                cursoList = (ArrayList<Curso>) gson.fromJson(listC,
+                        new TypeToken<ArrayList<Curso>>() {
+                        }.getType());
+
+                mAdapter = new AdaptadorCurso(cursoList, MantenimientoCursoActivity.this);
+                coordinatorLayout = findViewById(R.id.coordinator_layoutC);
+
+                //white background notification bar
+                whiteNotificationBar(mRecyclerView);
+                Log.d("dataCursossss", listC);
+
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                mRecyclerView.setLayoutManager(mLayoutManager);
+                mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                mRecyclerView.addItemDecoration(new DividerItemDecoration(MantenimientoCursoActivity.this, DividerItemDecoration.VERTICAL));
+                mRecyclerView.setAdapter(mAdapter);
+
                 //Y se recarga la lista de profesores
-                apiUrlTemp = apiUrl;
+                /*apiUrlTemp = apiUrl;
                 MyAsyncTasksCurso myAsyncTasksC = new MyAsyncTasksCurso();
-                myAsyncTasksC.execute();
+                myAsyncTasksC.execute();*/
             }catch (Exception e){
                 e.printStackTrace();
             }

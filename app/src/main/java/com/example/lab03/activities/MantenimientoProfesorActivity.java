@@ -66,7 +66,6 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
     private FloatingActionButton floatingActionButton;
     ProgressDialog progressDialog;
     private ModelData modelData;
-    private String mensaje;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +74,6 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbarP);
         setSupportActionBar(toolbar);
         modelData = ModelData.getInstance();
-        mensaje = "";
         apiUrlTemp = apiUrl;
 
 
@@ -96,8 +94,8 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
         mRecyclerView.setAdapter(adaptadorProfesor);
 
         //AsyncTask aca se usa el web service para cargar los datos de la base del profesor
-        MyAsyncTasks myAsyncTasks = new MyAsyncTasks();
-        myAsyncTasks.execute();
+        MyAsyncTasksProfeOperaciones myAsyncTasksPO = new MyAsyncTasksProfeOperaciones();
+        myAsyncTasksPO.execute();
 
         // go to update or add profesor
         floatingActionButton = findViewById(R.id.addBtnP);
@@ -230,97 +228,6 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
         }
     }
 
-    public class MyAsyncTasks extends AsyncTask<String, String, String> {
-
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // display a progress dialog for good user experiance
-            /*progressDialog = new ProgressDialog(MantenimientoProfesorActivity.this);
-            progressDialog.setMessage("Please Wait");
-            progressDialog.setCancelable(false);
-            progressDialog.show();*/
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            // implement API in background and store the response in current variable
-            String current = "";
-
-
-            try {
-                URL url;
-                HttpURLConnection urlConnection = null;
-                try {
-                    url = new URL(apiUrlTemp);
-
-                    urlConnection = (HttpURLConnection) url.openConnection();
-
-                    InputStream in = urlConnection.getInputStream();
-
-                    InputStreamReader isw = new InputStreamReader(in);
-
-                    int data = isw.read();
-                    while (data != -1) {
-                        current += (char) data;
-                        data = isw.read();
-                    }
-
-                    // return the data to onPostExecute method
-                    Log.w("JSON",current);
-                    return current;
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if (urlConnection != null) {
-                        urlConnection.disconnect();
-                    }
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return "Exception: " + e.getMessage();
-            }
-            return current;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-
-            String jsonObjectAsString = s;
-            // dismiss the progress dialog after receiving data from API
-            //progressDialog.dismiss();
-
-            //Json
-            try{
-                Gson gson = new Gson();
-
-                profesorList = (ArrayList<Profesor>) gson.fromJson(s,
-                        new TypeToken<ArrayList<Profesor>>(){}.getType());
-
-                adaptadorProfesor = new AdaptadorProfesor(profesorList, MantenimientoProfesorActivity.this);
-                coordinatorLayout = findViewById(R.id.constraint_layoutP);
-
-                //white background notification bar
-                whiteNotificationBar(mRecyclerView);
-                Log.d("dataProfes", jsonObjectAsString);
-
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-                mRecyclerView.setLayoutManager(mLayoutManager);
-                mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                mRecyclerView.addItemDecoration(new DividerItemDecoration(MantenimientoProfesorActivity.this, DividerItemDecoration.VERTICAL));
-                mRecyclerView.setAdapter(adaptadorProfesor);
-
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            Log.d("JSONP",s);
-        }
-
-    }
 
     public class MyAsyncTasksProfeOperaciones extends AsyncTask<String, String, String> {
 
@@ -390,13 +297,31 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
                 JSONObject jsonObjectMensaje = new JSONObject(s);
                 boolean estado = jsonObjectMensaje.getBoolean("error");
                 String mensaje = jsonObjectMensaje.getString("mensaje");
+                String listP = jsonObjectMensaje.getString("listProf");
+
                 //Se muestra el mensaje de estado de operacion
                 Toast.makeText(MantenimientoProfesorActivity.this,mensaje,Toast.LENGTH_LONG).show();
 
+                profesorList = (ArrayList<Profesor>) gson.fromJson(listP,
+                        new TypeToken<ArrayList<Profesor>>(){}.getType());
+
+                adaptadorProfesor = new AdaptadorProfesor(profesorList, MantenimientoProfesorActivity.this);
+                coordinatorLayout = findViewById(R.id.constraint_layoutP);
+
+                //white background notification bar
+                whiteNotificationBar(mRecyclerView);
+                Log.d("dataProfesssss", listP);
+
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                mRecyclerView.setLayoutManager(mLayoutManager);
+                mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                mRecyclerView.addItemDecoration(new DividerItemDecoration(MantenimientoProfesorActivity.this, DividerItemDecoration.VERTICAL));
+                mRecyclerView.setAdapter(adaptadorProfesor);
+
                 //Y se recarga la lista de profesores
-                apiUrlTemp = apiUrl;
+                /*apiUrlTemp = apiUrl;
                 MyAsyncTasks myAsyncTasks = new MyAsyncTasks();
-                myAsyncTasks.execute();
+                myAsyncTasks.execute();*/
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -422,8 +347,8 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
                     profeU = gson.toJson(aux);
 
                     apiUrlTemp = apiUrlAcciones+ "app=updateP" +"&profeU=" + profeU;
-                    MyAsyncTasks myAsyncTasks = new MyAsyncTasks();//Aca va el de operaciones
-                    myAsyncTasks.execute();
+                    MyAsyncTasksProfeOperaciones myAsyncTasksPO = new MyAsyncTasksProfeOperaciones();//Aca va el de operaciones
+                    myAsyncTasksPO.execute();
                     //Toast.makeText(getApplicationContext(), aux.getNombre() + "Editado Correctamente!", Toast.LENGTH_LONG).show();
                 }
             } else { //Accion de agregar profesor
