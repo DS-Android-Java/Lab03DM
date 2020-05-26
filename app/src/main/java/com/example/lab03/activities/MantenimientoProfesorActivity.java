@@ -295,7 +295,6 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
             //progressDialog.dismiss();
 
             //Json
-
             try{
                 Gson gson = new Gson();
 
@@ -304,7 +303,6 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
 
                 adaptadorProfesor = new AdaptadorProfesor(profesorList, MantenimientoProfesorActivity.this);
                 coordinatorLayout = findViewById(R.id.constraint_layoutP);
-
 
                 //white background notification bar
                 whiteNotificationBar(mRecyclerView);
