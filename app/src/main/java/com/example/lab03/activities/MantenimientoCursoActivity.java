@@ -53,7 +53,7 @@ public class MantenimientoCursoActivity extends AppCompatActivity
     String apiUrl = "http://192.168.0.3:8080/Backend_JSON/modelos/curso/list?";
     //String apiUrl = "http://10.0.2.2:8080/Backend_JSON/modelos/curso/list";//Esta para emulador
 
-    //Url agregar
+    //Url operaciones
     String apiUrlAcciones = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso?";
     //String apiUrlAcciones = "http://10.0.2.2:8080/Backend_JSON/Controlador/curso?";//Esta para emulador
 
@@ -67,7 +67,6 @@ public class MantenimientoCursoActivity extends AppCompatActivity
     private FloatingActionButton fab;
     ProgressDialog progressDialog;
     private ModelData model;
-    private String mensaje;
 
 
     @Override
@@ -77,7 +76,6 @@ public class MantenimientoCursoActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbarC);
         setSupportActionBar(toolbar);
         model = ModelData.getInstance();
-        mensaje = "";
         apiUrlTemp = apiUrl;
 
         //toolbar fancy stuff
@@ -100,8 +98,8 @@ public class MantenimientoCursoActivity extends AppCompatActivity
         mRecyclerView.setAdapter(mAdapter);
 
         //AsyncTask aca se usa el web service para cargar los datos de la base del profesor
-        MyAsyncTasksCursoOperaciones myAsyncTasks = new MyAsyncTasksCursoOperaciones();
-        myAsyncTasks.execute();
+        MyAsyncTasksCurso myAsyncTasksC = new MyAsyncTasksCurso();
+        myAsyncTasksC.execute();
 
         // go to update or add career
         fab = findViewById(R.id.addBtnC);
@@ -167,7 +165,7 @@ public class MantenimientoCursoActivity extends AppCompatActivity
         }
     }
 
-    public class MyAsyncTasksCursoOperaciones extends AsyncTask<String, String, String> {
+    public class MyAsyncTasksCurso extends AsyncTask<String, String, String> {
 
         @Override
         protected void onPreExecute() {
@@ -254,6 +252,90 @@ public class MantenimientoCursoActivity extends AppCompatActivity
             }
 
             Log.d("JSONJEJE",s);
+        }
+
+    }
+
+    public class MyAsyncTasksCursoOperaciones extends AsyncTask<String, String, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // display a progress dialog for good user experiance
+            /*progressDialog = new ProgressDialog(MantenimientoProfesorActivity.this);
+            progressDialog.setMessage("Please Wait");
+            progressDialog.setCancelable(false);
+            progressDialog.show();*/
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            // implement API in background and store the response in current variable
+            String current = "";
+
+
+            try {
+                URL url;
+                HttpURLConnection urlConnection = null;
+                try {
+                    url = new URL(apiUrlTemp);
+
+                    urlConnection = (HttpURLConnection) url.openConnection();
+
+                    InputStream in = urlConnection.getInputStream();
+
+                    InputStreamReader isw = new InputStreamReader(in);
+
+                    int data = isw.read();
+                    while (data != -1) {
+                        current += (char) data;
+                        data = isw.read();
+                    }
+
+                    // return the data to onPostExecute method
+                    Log.w("JSON",current);
+                    return current;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (urlConnection != null) {
+                        urlConnection.disconnect();
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "Exception: " + e.getMessage();
+            }
+            return current;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+            // dismiss the progress dialog after receiving data from API
+            //progressDialog.dismiss();
+
+            //Json
+            try{
+                Gson gson = new Gson();
+
+                JSONObject jsonObjectMensaje = new JSONObject(s);
+                boolean estado = jsonObjectMensaje.getBoolean("error");
+                String mensaje = jsonObjectMensaje.getString("mensaje");
+                //Se muestra el mensaje de estado de operacion
+                Toast.makeText(MantenimientoCursoActivity.this,mensaje,Toast.LENGTH_LONG).show();
+
+                //Y se recarga la lista de profesores
+                apiUrlTemp = apiUrl;
+                MyAsyncTasksCurso myAsyncTasksC = new MyAsyncTasksCurso();
+                myAsyncTasksC.execute();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            Log.d("JSONMENSAJE",s);
         }
 
     }
@@ -352,7 +434,6 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                     apiUrlTemp = apiUrlAcciones+"acc=updateC" +"&cursoU="+cursoU +"&profesor_id="+aux.getProfesor().getCedula();
                     MyAsyncTasksCursoOperaciones myAsyncTasksOp = new MyAsyncTasksCursoOperaciones();
                     myAsyncTasksOp.execute();
-                    Toast.makeText(getApplicationContext(), aux.getNombre() + " Editado Correctamente!", Toast.LENGTH_LONG).show();
                 }
             } else {//Accion de agregar
                 //found a new Curso Object
@@ -362,7 +443,6 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                 apiUrlTemp = apiUrlAcciones+"acc=addC" +"&cursoA="+cursoA +"&profesor_id="+aux.getProfesor().getCedula();
                 MyAsyncTasksCursoOperaciones myAsyncTasksOp = new MyAsyncTasksCursoOperaciones();
                 myAsyncTasksOp.execute();
-                Toast.makeText(getApplicationContext(), aux.getNombre() + " Agregado Correctamente!", Toast.LENGTH_LONG).show();
             }
         }
     }

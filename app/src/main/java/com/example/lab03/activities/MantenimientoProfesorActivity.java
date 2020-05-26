@@ -199,7 +199,7 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
                 apiUrlTemp = apiUrlAcciones + "app=deleteP" + "&id_Profe=" + cedula;
                 //MyAsyncTasks myAsyncTasks = new MyAsyncTasks();
                 //myAsyncTasks.execute();
-                MyAsyncTasksDeleteProfe myAsyncTasksDeleteProfe = new MyAsyncTasksDeleteProfe();
+                MyAsyncTasksProfeOperaciones myAsyncTasksDeleteProfe = new MyAsyncTasksProfeOperaciones();
                 myAsyncTasksDeleteProfe.execute();
 
                 //save the index deleted
@@ -322,7 +322,7 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
 
     }
 
-    public class MyAsyncTasksDeleteProfe extends AsyncTask<String, String, String> {
+    public class MyAsyncTasksProfeOperaciones extends AsyncTask<String, String, String> {
 
         @Override
         protected void onPreExecute() {
@@ -380,7 +380,6 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(String s) {
-
             // dismiss the progress dialog after receiving data from API
             //progressDialog.dismiss();
 
@@ -423,9 +422,9 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
                     profeU = gson.toJson(aux);
 
                     apiUrlTemp = apiUrlAcciones+ "app=updateP" +"&profeU=" + profeU;
-                    MyAsyncTasks myAsyncTasks = new MyAsyncTasks();
+                    MyAsyncTasks myAsyncTasks = new MyAsyncTasks();//Aca va el de operaciones
                     myAsyncTasks.execute();
-                    Toast.makeText(getApplicationContext(), aux.getNombre() + "Editado Correctamente!", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), aux.getNombre() + "Editado Correctamente!", Toast.LENGTH_LONG).show();
                 }
             } else { //Accion de agregar profesor
                 //found a new Profesor Object
@@ -433,9 +432,8 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
             profeA = gson.toJson(aux);
 
             apiUrlTemp = apiUrlAcciones+"app=addP" + "&profeA=" + profeA;
-            MyAsyncTasks myAsyncTasks = new MyAsyncTasks();
-            myAsyncTasks.execute();
-            Toast.makeText(getApplicationContext(), aux.getNombre()+"Agregado Correctamente!", Toast.LENGTH_LONG).show();
+            MyAsyncTasksProfeOperaciones myAsyncTasksP = new MyAsyncTasksProfeOperaciones();//Aca tambien
+            myAsyncTasksP.execute();
             }
         }
     }
