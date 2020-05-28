@@ -54,13 +54,13 @@ public class UpdateCursoActivity extends AppCompatActivity {
     private List<Carrera> carreras;
 
     //Url cargar combo carreras
-    String apiUrlCargaComboCarrera = "http://192.168.0.3:8080/Backend_JSON/modelos/curso/preparaCreate?";
-    //String apiUrlCargaComboCarrera = "http://10.0.2.2:8080/Backend_JSON/modelos/curso/preparaCreate?";//Esta para emulador
+    //String apiUrlCargaComboCarrera = "http://192.168.0.3:8080/Backend_JSON/modelos/curso/preparaCreate?";
+    String apiUrlCargaComboCarrera = "http://10.0.2.2:8080/Backend_JSON/modelos/curso/preparaCreate?";//Esta para emulador
 
 
     //Url cargar combo profesores
-    String apiUrlCargaComboProfesores = "http://192.168.0.3:8080/Backend_JSON/modelos/curso/comboProfesor?";
-    //String apiUrlCargaComboProfesores = "http://10.0.2.2:8080/Backend_JSON/modelos/curso/comboProfesor?";//Esta para emulador
+    //String apiUrlCargaComboProfesores = "http://192.168.0.3:8080/Backend_JSON/modelos/curso/comboProfesor?";
+    String apiUrlCargaComboProfesores = "http://10.0.2.2:8080/Backend_JSON/modelos/curso/comboProfesor?";//Esta para emulador
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +97,6 @@ public class UpdateCursoActivity extends AppCompatActivity {
         spinnerProfesor = findViewById(R.id.spinnerProfesor);
         profesores = new ArrayList<>();
 
-
         spinnerCarrera = findViewById(R.id.spinnerCarrera);
         carreras = new ArrayList<>();
         ////////////////////
@@ -108,6 +107,7 @@ public class UpdateCursoActivity extends AppCompatActivity {
 
             editable = extras.getBoolean("editable");
             if (editable) {   // is editing some row
+
                 Curso aux = (Curso) getIntent().getSerializableExtra("curso");
                 etCodigo.setText(aux.getCodigo());
                 etCodigo.setEnabled(false);
@@ -116,8 +116,7 @@ public class UpdateCursoActivity extends AppCompatActivity {
                 etCiclo.setText(aux.getCiclo());
                 etCreditos.setText(aux.getCreditos());
                 etHorasSemanales.setText(aux.getHora_semanales());
-                //spinnerProfesor.setSelection(adaptadorP.getPosition(aux.getProfesor()));
-                //spinnerCarrera.setSelection(adaptadorC.getPosition(aux.getCodCarrera()));
+
                 //edit action
                 fBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -213,6 +212,7 @@ public class UpdateCursoActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(this.etCodigo.getText())) {
             etCodigo.setError("Codigo requerido");
             error++;
+
         }
         if (TextUtils.isEmpty(this.etCreditos.getText())) {
             etCreditos.setError("Creditos requerido");
@@ -292,13 +292,21 @@ public class UpdateCursoActivity extends AppCompatActivity {
             //Json
             try {
                 Gson gson = new Gson();
-
                 carreras = (ArrayList<Carrera>) gson.fromJson(s,
                         new TypeToken<ArrayList<Carrera>>() {
                         }.getType());
-
                 adaptadorC = new ArrayAdapter<Carrera>(UpdateCursoActivity.this, R.layout.spinner_item_diego, carreras);
                 spinnerCarrera.setAdapter(adaptadorC);
+                if(editable){
+                    Curso aux = (Curso) getIntent().getSerializableExtra("curso");
+                    for(Carrera car :carreras){
+                        if(car.getCodCarrera().equals(aux.getCodCarrera())){
+                            spinnerCarrera.setSelection(adaptadorC.getPosition(car));
+                            break;
+                        }
+                    }
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -375,6 +383,14 @@ public class UpdateCursoActivity extends AppCompatActivity {
 
                 adaptadorP = new ArrayAdapter<Profesor>(UpdateCursoActivity.this, R.layout.spinner_item_diego, profesores);
                 spinnerProfesor.setAdapter(adaptadorP);
+                if(editable){
+                   Curso aux = (Curso) getIntent().getSerializableExtra("curso");
+                    for(Profesor profesor : profesores){
+                        if(profesor.getCedula().equals(aux.getProfesor().getCedula())){
+                            spinnerProfesor.setSelection(adaptadorP.getPosition(profesor));
+                        }
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

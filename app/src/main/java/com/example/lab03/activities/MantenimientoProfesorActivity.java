@@ -49,12 +49,12 @@ public class MantenimientoProfesorActivity extends AppCompatActivity
         implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener, AdaptadorProfesor.AdaptadorProfesorListener  {
 
     //Url listar
-    String apiUrl = "http://192.168.0.3:8080/Backend_JSON/modelos/profesor/list?";//Esta para mi celular ip de mi compu la ipv4 de mi LAN
-    //String apiUrl = "http://10.0.2.2:8080/Backend_JSON/modelos/profesor/list";//Esta para emulador
+    //String apiUrl = "http://192.168.0.3:8080/Backend_JSON/modelos/profesor/list?";//Esta para mi celular ip de mi compu la ipv4 de mi LAN
+    String apiUrl = "http://10.0.2.2:8080/Backend_JSON/modelos/profesor/list";//Esta para emulador
 
     //Url agregar
-    String apiUrlAcciones= "http://192.168.0.3:8080/Backend_JSON/Controlador/profesor?";
-    //String apiUrlAcciones= "http://10.0.2.2:8080/Backend_JSON/Controlador/profesor?"; //Esta para emulador
+    //String apiUrlAcciones= "http://192.168.0.3:8080/Backend_JSON/Controlador/profesor?";
+    String apiUrlAcciones= "http://10.0.2.2:8080/Backend_JSON/Controlador/profesor?"; //Esta para emulador
 
     String apiUrlTemp;
 

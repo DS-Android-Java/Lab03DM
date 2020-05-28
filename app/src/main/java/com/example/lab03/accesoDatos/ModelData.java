@@ -28,10 +28,6 @@ public class ModelData {
         listaCarrera = new ArrayList<>();
         listaCurso = new ArrayList<>();
         listaUsuario = new ArrayList<>();
-
-        //initCarreras();
-        //initProfesores();//por que como ya los estoy sacando de la base para que no me salgan los quemados
-        //initCursos();
     }
 
     public static ModelData getInstance(){

@@ -50,12 +50,12 @@ public class MantenimientoCursoActivity extends AppCompatActivity
         implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener, AdaptadorCurso.AdaptadorCursoListener {
 
     //Url listar
-    String apiUrl = "http://192.168.0.3:8080/Backend_JSON/modelos/curso/list?";
-    //String apiUrl = "http://10.0.2.2:8080/Backend_JSON/modelos/curso/list";//Esta para emulador
+   // String apiUrl = "http://192.168.0.3:8080/Backend_JSON/modelos/curso/list?";
+    String apiUrl = "http://10.0.2.2:8080/Backend_JSON/modelos/curso/list";//Esta para emulador
 
     //Url operaciones
-    String apiUrlAcciones = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso?";
-    //String apiUrlAcciones = "http://10.0.2.2:8080/Backend_JSON/Controlador/curso?";//Esta para emulador
+    //String apiUrlAcciones = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso?";
+    String apiUrlAcciones = "http://10.0.2.2:8080/Backend_JSON/Controlador/curso?";//Esta para emulador
 
     String apiUrlTemp;
 
@@ -141,17 +141,6 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                 // remove the item from recyclerView
                 mAdapter.removeItem(viewHolder.getAdapterPosition());
 
-                // showing snack bar with Undo option
-                /*Snackbar snackbar = Snackbar.make(coordinatorLayout, name + mensaje, Snackbar.LENGTH_LONG);
-                snackbar.setAction("UNDO", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // undo is selected, restore the deleted item from adapter
-                        mAdapter.restoreItem(deletedIndex);
-                    }
-                });
-                snackbar.setActionTextColor(Color.YELLOW);
-                snackbar.show();*/
             }
         } else {
             //If is editing a row object
@@ -170,11 +159,6 @@ public class MantenimientoCursoActivity extends AppCompatActivity
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            // display a progress dialog for good user experiance
-            /*progressDialog = new ProgressDialog(MantenimientoProfesorActivity.this);
-            progressDialog.setMessage("Please Wait");
-            progressDialog.setCancelable(false);
-            progressDialog.show();*/
         }
 
         @Override
@@ -254,10 +238,7 @@ public class MantenimientoCursoActivity extends AppCompatActivity
                 mRecyclerView.addItemDecoration(new DividerItemDecoration(MantenimientoCursoActivity.this, DividerItemDecoration.VERTICAL));
                 mRecyclerView.setAdapter(mAdapter);
 
-                //Y se recarga la lista de profesores
-                /*apiUrlTemp = apiUrl;
-                MyAsyncTasksCurso myAsyncTasksC = new MyAsyncTasksCurso();
-                myAsyncTasksC.execute();*/
+
             }catch (Exception e){
                 e.printStackTrace();
             }
