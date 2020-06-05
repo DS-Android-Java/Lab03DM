@@ -65,12 +65,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
      * Keep track of the login task to ensure we can cancel it if requested.
      */
 
-    private UserLoginTask mAuthTask = null;
+    private UserLoginTask mAuthTask = null; 
     private SharedPreferences prefs;
     private Usuario usuario;
     private ArrayList<Usuario> usuariosList;
-    //String apiUrlLogin = "http://192.168.0.3:8080/Backend_JSON/Controlador/curso/login?";
-    String apiUrlLogin = "http://10.0.2.2:8080/Backend_JSON/Controlador/curso/login?";//Esta para emulador
+    String apiUrlLogin = "http://192.168.0.19:8080/Backend_JSON/Controlador/curso/login?";
+    //String apiUrlLogin = "http://10.0.2.2:8080/Backend_JSON/Controlador/curso/login?";//Esta para emulador
 
 
     // UI references.

@@ -54,13 +54,13 @@ public class UpdateCursoActivity extends AppCompatActivity {
     private List<Carrera> carreras;
 
     //Url cargar combo carreras
-    //String apiUrlCargaComboCarrera = "http://192.168.0.3:8080/Backend_JSON/modelos/curso/preparaCreate?";
-    String apiUrlCargaComboCarrera = "http://10.0.2.2:8080/Backend_JSON/modelos/curso/preparaCreate?";//Esta para emulador
+    String apiUrlCargaComboCarrera = "http://192.168.0.19:8080/Backend_JSON/modelos/curso/preparaCreate?";
+    //String apiUrlCargaComboCarrera = "http://10.0.2.2:8080/Backend_JSON/modelos/curso/preparaCreate?";//Esta para emulador
 
 
     //Url cargar combo profesores
-    //String apiUrlCargaComboProfesores = "http://192.168.0.3:8080/Backend_JSON/modelos/curso/comboProfesor?";
-    String apiUrlCargaComboProfesores = "http://10.0.2.2:8080/Backend_JSON/modelos/curso/comboProfesor?";//Esta para emulador
+    String apiUrlCargaComboProfesores = "http://192.168.0.19:8080/Backend_JSON/modelos/curso/comboProfesor?";
+    //String apiUrlCargaComboProfesores = "http://10.0.2.2:8080/Backend_JSON/modelos/curso/comboProfesor?";//Esta para emulador
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,7 +139,7 @@ public class UpdateCursoActivity extends AppCompatActivity {
         DisplayMetrics medidasVentana = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(medidasVentana);
 
-        int ancho = medidasVentana.widthPixels;
+        int ancho = medidasVentana.widthPixels; 
         int alto = medidasVentana.heightPixels;
 
         getWindow().setLayout((int)(ancho * 0.90), (int)(alto * 0.80));
