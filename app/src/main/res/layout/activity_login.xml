@@ -79,7 +79,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/btn_login"
                 android:text="Ingresar"
-                android:textColor="#fff"
+                android:textColor="#ffffff"
                 android:textStyle="bold"
                 android:textAllCaps="false"/>
 

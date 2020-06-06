@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Gestión académica</string>
+    <string name="app_name">Gestión Académica</string>
     <!-- String related to shared preferences -->
     <string name="preference_user_key">com.example.lab03</string>
     <string name="preference_user_key_default">none</string>
