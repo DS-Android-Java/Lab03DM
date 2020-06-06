@@ -183,8 +183,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderManager.Lo
 
         @Override
         protected void onPostExecute(String s) {
-
-            String jsonObjectAsString = s;
+            //String jsonObjectAsString = s;
             // dismiss the progress dialog after receiving data from API
 
             //Json

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clickable="true"
@@ -65,6 +66,11 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:padding="@dimen/padd_10">
+        <ImageView
+            android:id="@+id/imageProf"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            app:srcCompat="@drawable/profesor" />
 
         <TextView
             android:id="@+id/nombre"
@@ -72,6 +78,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
+            android:layout_toRightOf="@+id/imageProf"
             android:maxLines="1"
             android:textColor="@color/item_name"
             android:textSize="17dp" />
@@ -92,6 +99,7 @@
             android:id="@+id/telefono"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/imageProf"
             android:layout_below="@id/nombre"
             android:layout_marginTop="5dp"
             android:textColor="@color/description"
@@ -106,7 +114,5 @@
             android:layout_marginTop="5dp"
             android:textColor="@color/description"
             android:textSize="12dp" />
-
-
     </RelativeLayout>
 </FrameLayout>

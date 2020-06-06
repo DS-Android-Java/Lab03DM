@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,6 +30,7 @@ public class AdaptadorCurso extends RecyclerView.Adapter<AdaptadorCurso.MyViewHo
         public TextView titulo1, titulo2, description,profe;
         //two layers
         public RelativeLayout viewForeground, viewBackgroundDelete, viewBackgroundEdit;
+        public ImageView imageCarrera;
 
         public MyViewHolder(View view) {
             super(view);
@@ -39,6 +41,7 @@ public class AdaptadorCurso extends RecyclerView.Adapter<AdaptadorCurso.MyViewHo
             viewBackgroundDelete = view.findViewById(R.id.view_background_delete);
             viewBackgroundEdit = view.findViewById(R.id.view_background_edit);
             viewForeground = view.findViewById(R.id.view_foreground);
+            imageCarrera = view.findViewById(R.id.imageCarrera);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -72,6 +75,13 @@ public class AdaptadorCurso extends RecyclerView.Adapter<AdaptadorCurso.MyViewHo
         holder.titulo2.setText(curso.getNombre());
         holder.description.setText(curso.getCreditos() + " Créditos");
         holder.profe.setText("   Profesor: "+curso.getProfesor().getNombre());
+        if(curso.getCodCarrera().equals("EIF")){
+            holder.imageCarrera.setImageResource(R.drawable.codigo);
+        }else if(curso.getCodCarrera().equals("QUI")){
+            holder.imageCarrera.setImageResource(R.drawable.quimica);
+        }else if(curso.getCodCarrera().equals("AIF")){
+            holder.imageCarrera.setImageResource(R.drawable.estadisticas);
+        }
     }
 
     @Override
